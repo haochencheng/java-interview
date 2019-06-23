@@ -741,6 +741,15 @@ CAFEBABE 00000031 00360A00 0E001C09 001D001E 08001F0A 00200021 08002209 000D0023
 
    >00000031
    >
-   >
+   >前两个字节00是minor_version，后两个字节0034是major_version字段，对应的十进制值为52，也就是说当前class文件的主版本号为52，次版本号为0。下表是jdk 1.6 以后对应支持的 Class 文件版本号：
 
-3. 
+   ![jdkversion](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/jdkversion.png)
+
+3. **常量池，constant_pool**
+
+   > `constant_pool_count`
+   > 紧接着version字段下来的两个字节是：`00 12`代表常量池里包含的常量数目，因为字节码的常量池是从1开始计数的，这个常量池包含17个（0x0012-1）常量。
+
+   
+
+4. 
