@@ -17,7 +17,7 @@ public final class String implements java.io.Serializable, Comparable<String>, C
 }
 ```
 ####    String，Stringbuffer，StringBuilder的区别。
-
+![String，Stringbuffer，StringBuilder类图](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/WX20190623-132039%402x.png)
 String 不可变常量字符串
 
 Stringbuffer，StringBuilder 继承 AbstractStringbuilder，全部用父类实现，Stringbuffer线程安全 所有方法使用synchronized 同步保证线程安全。StringBuilder非线程安全
