@@ -623,12 +623,32 @@ Process finished with exit code 0
 
 深入：
 
-- java编译器将java文件便以为class文件
+- java平台无关性
 
-javac 将.java文件编译为.class 文件
+  1. class文件
 
-- java class 文件结构
+  Java是与平台无关的语言，这得益于Java源代码编译后生成的存储字节码的文件，即Class文件，以及Java虚拟机的实现。不仅使用Java编译器可以把Java代码编译成存储字节码的Class文件，使用JRuby等其他语言的编译器也可以把程序代码编译成Class文件，虚拟机并不关心Class的来源是什么语言，只要它符合一定的结构，就可以在Java中运行。Java语言中的各种变量、关键字和运算符的语义最终都是由多条字节码命令组合而成的，因此字节码命令所能提供的语义描述能力肯定会比Java语言本身更强大，这便为其他语言实现一些有别于Java的语言特性提供了基础，而且这也正是在类加载时要进行安全验证的原因。
 
-  如图idea工具查看class文件结构
+  2. class文件结构
 
-  ![a]()
+     - class文件是一种8位字节的二进制流文件
+
+     - 每个类（或者接口）都单独占据一个class文件，并且类中的所有信息都会在class文件中有相应的描述
+
+     - class文件中的信息是一项一项排列的， 每项数据都有它的固定长度， 有的占一个字节， 有的占两个字节， 还有的占四个字节或8个字节， 数据项的不同长度分别用u1, u2, u4, u8表示， 分别表示一种数据项在class文件中占据一个字节， 两个字节， 4个字节和8个字节。 可以把u1, u2, u3, u4看做class文件数据项的“类型” 。
+
+     一个典型的class文件分为：
+
+     - MagicNumber
+     - Version
+     - Constant_pool
+     - Access_flag
+     - This_class
+     - Super_class
+     - Interfaces
+     - Fields
+     - Methods 和Attributes这十个部分
+
+如图idea工具查看class文件结构
+
+![java-class](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/java-class.png)
