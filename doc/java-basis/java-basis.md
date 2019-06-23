@@ -717,7 +717,7 @@ method[]是包含方法信息的一个详细列表。
 
 如图idea工具查看class文件结构
 
-![javaclass](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/java-class.png)
+![javaclass](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/javaclass.png)
 
 16进制编辑器查看Parent.class文件
 
