@@ -640,15 +640,54 @@ Process finished with exit code 0
      一个典型的class文件分为：
 
      - MagicNumber
+
      - Version
+
      - Constant_pool
+
      - Access_flag
+
      - This_class
+
      - Super_class
+
      - Interfaces
+
      - Fields
+
      - Methods 和Attributes这十个部分
+
+       用一个数据结构可以表示如下：
+
+![classStructure](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/class_code.png)
+
+1、**magic**
+
+在class文件开头的四个字节， 存放着class文件的魔数， 这个魔数是class文件的标志，他是一个固定的值： 0XCAFEBABE 。 也就是说他是判断一个文件是不是class格式的文件的标准， 如果开头四个字节不是0XCAFEBABE， 那么就说明它不是class文件， 不能被JVM识别。
+
+2、**minor_version 和 major_version**
+
+紧接着魔数的四个字节是class文件的此版本号和主版本号。
+
+3、**constant_pool**
+
+在class文件中， 位于版本号后面的就是常量池相关的数据项。 常量池是class文件中的一项非常重要的数据。 常量池中存放了文字字符串， 常量值， 当前类的类名， 字段名， 方法名， 各个字段和方法的描述符， 对当前类的字段和方法的引用信息， 当前类中对其他类的引用信息等等。
+
+常量池是一个类的结构索引，其它地方对“对象”的引用可以通过索引位置来代替，我们知道在程序中一个变量可以不断地被调用，要快速获取这个变量常用的方法就是通过索引变量。这种索引我们可以直观理解为“虚拟的内存地址”。
+
+常量池中的第一项的索引为1, 而不为0。
+
+
+
+
+
+
 
 如图idea工具查看class文件结构
 
 ![java-class](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/java-class.png)
+
+16进制编辑器查看Parent.class文件
+
+![16hex-parent.class](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/16hexclassfile.png)
+
