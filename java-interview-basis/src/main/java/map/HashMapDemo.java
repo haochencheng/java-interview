@@ -1,9 +1,5 @@
 package map;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 /**
  * @description:
@@ -32,9 +28,8 @@ public class HashMapDemo {
         System.out.println(getIndex(g));
         System.out.println(getIndex(h));
         System.out.println(getIndex(i));
-        Date date=new Date();
-        LocalDateTime from = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        System.out.println(from.toString());
+        System.out.println("2|20===="+(2|20));
+        System.out.println("2|6===="+(2|6));
     }
 
     private static int n = 1 << 4;
