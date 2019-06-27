@@ -895,7 +895,7 @@ Collection,Map。
 
 HashMap 键值对数据结构,底层存储数组，数组元素为链表结构。
 
-![hashmap](https://github.com/haochencheng/java-interview/raw/master/pic/java-basis/hashmap)
+![hashmap](https://github.com/haochencheng/java-interview/raw/master/pic/java-basis/hashmap.png)
 
 ```java
 transient Node<K,V>[] table;
@@ -913,6 +913,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 通过对key 进行hash 与 高位^（异或） 在和 容器容量取 &（按位与） 确定数组下标
 
 ```java
+//扰动函数
 static final int hash(Object key) {
     int h;
     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
@@ -928,7 +929,13 @@ if ((p = tab[i = (n - 1) & hash]) == null)
 
 
 
-添加元素源码，如果hash冲突。插入数组Node节点的链表中，如果链表大小超过8个，则转化为红黑树。
+添加元素源码
+
+1.找到要插入节点引用
+
+2.改变该引用value
+
+如果hash冲突，插入数组Node节点的链表中，如果链表大小超过8个，则转化为红黑树。
 
 ```java
 final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
@@ -942,36 +949,48 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
             tab[i] = newNode(hash, key, value, null);
         else {
             Node<K,V> e; K k;
+            //如果hash值相等 key 也相等 覆盖value操作 将p 当前节点引用复制给e
             if (p.hash == hash &&
                 ((k = p.key) == key || (key != null && key.equals(k))))
                 e = p;
+            //如果是红黑树 把值放入红黑树
             else if (p instanceof TreeNode)
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
             else {
+              //否则是链表 插入链表尾部
                 for (int binCount = 0; ; ++binCount) {
                     if ((e = p.next) == null) {
                         p.next = newNode(hash, key, value, null);
+                      //如果链表大于等于树化阈值 树化这个节点
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
                             treeifyBin(tab, hash);
                         break;
                     }
+                    //如果链表上的节点 hash值相等 key 也相等 覆盖value
                     if (e.hash == hash &&
                         ((k = e.key) == key || (key != null && key.equals(k))))
                         break;
+                    //改变p的引用 为当前e 循环继续
                     p = e;
                 }
             }
+            //如果存在 key 的映射
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
+                //如果不是不存在就添加  或者 原值为null
                 if (!onlyIfAbsent || oldValue == null)
+                    //设置新值
                     e.value = value;
                 afterNodeAccess(e);
                 return oldValue;
             }
         }
+        //修改次数增加
         ++modCount;
+   	    //如果当前容量大于扩容阈值 进行扩容
         if (++size > threshold)
             resize();
+  			//插入节点后操作 for linkedHashMap
         afterNodeInsertion(evict);
         return null;
     }
