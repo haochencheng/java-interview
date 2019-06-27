@@ -717,14 +717,146 @@ method[]是包含方法信息的一个详细列表。
 
 如图idea工具查看class文件结构
 
-![javaclass](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/javaclass.png)
+![javaclass](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/java-class.png)
 
 16进制编辑器查看Parent.class文件
 
-![16hex-parent.class](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/java-basis/16hexclassfile.png)
+```
+CAFEBABE 00000034 00360A00 0E001C09 001D001E 08001F0A 00200021 08002209 000D0023 0700240A 0007001C 0800250A 00070026 0A000700 270A0007 00280700 2907002A 01000141 01000149 0100063C 696E6974 3E010003 28295601 0004436F 64650100 0F4C696E 654E756D 62657254 61626C65 0100124C 6F63616C 56617269 61626C65 5461626C 65010004 74686973 0100144C 636C6173 736C6F61 6465722F 50617265 6E743B01 00037361 79010008 3C636C69 6E69743E 01000A53 6F757263 6546696C 6501000B 50617265 6E742E6A 6176610C 00110012 07002B0C 002C002D 010019E7 88B6E7B1 BBEFBC9A 50617265 6E7420E6 9E84E980 A0E599A8 07002E0C 002F0030 010019E7 88B6E7B1 BBEFBC9A 50617265 6E7420E6 96B9E6B3 95736179 0C000F00 10010017 6A617661 2F6C616E 672F5374 72696E67 4275696C 64657201 001FE788 B6E7B1BB EFBC9A50 6172656E 7420E99D 99E68081 E4BBA3E7 A081E59D 970C0031 00320C00 3100330C 00340035 01001263 6C617373 6C6F6164 65722F50 6172656E 74010010 6A617661 2F6C616E 672F4F62 6A656374 0100106A 6176612F 6C616E67 2F537973 74656D01 00036F75 74010015 4C6A6176 612F696F 2F507269 6E745374 7265616D 3B010013 6A617661 2F696F2F 5072696E 74537472 65616D01 00077072 696E746C 6E010015 284C6A61 76612F6C 616E672F 53747269 6E673B29 56010006 61707065 6E640100 2D284C6A 6176612F 6C616E67 2F537472 696E673B 294C6A61 76612F6C 616E672F 53747269 6E674275 696C6465 723B0100 1C284929 4C6A6176 612F6C61 6E672F53 7472696E 67427569 6C646572 3B010008 746F5374 72696E67 01001428 294C6A61 76612F6C 616E672F 53747269 6E673B00 21000D00 0E000000 01000900 0F001000 00000300 01001100 12000100 13000000 3F000200 01000000 0D2AB700 01B20002 1203B600 04B10000 00020014 0000000E 00030000 00110004 0012000C 00130015 0000000C 00010000 000D0016 00170000 00010018 00120001 00130000 00370002 00010000 0009B200 021205B6 0004B100 00000200 14000000 0A000200 00001600 08001700 15000000 0C000100 00000900 16001700 00000800 19001200 01001300 00004000 03000000 00002004 B30006B2 0002BB00 0759B700 081209B6 000AB200 06B6000B B6000CB6 0004B100 00000100 14000000 0E000300 00000B00 04000E00 1F000F00 01001A00 00000200 1B
+```
+
+使用javap 解析 class信息
+
+`javap -v -p -s -sysinfo -constants Parent`
 
 ```
-CAFEBABE 00000031 00360A00 0E001C09 001D001E 08001F0A 00200021 08002209 000D0023 0700240A 0007001C 0800250A 00070026 0A000700 270A0007 00280700 2907002A 01000141 01000149 0100063C 696E6974 3E010003 28295601 0004436F 64650100 0F4C696E 654E756D 62657254 61626C65 0100124C 6F63616C 56617269 61626C65 5461626C 65010004 74686973 0100144C 636C6173 736C6F61 6465722F 50617265 6E743B01 00037361 79010008 3C636C69 6E69743E 01000A53 6F757263 6546696C 6501000B 50617265 6E742E6A 6176610C 00110012 07002B0C 002C002D 010019E7 88B6E7B1 BBEFBC9A 50617265 6E7420E6 9E84E980 A0E599A8 07002E0C 002F0030 010019E7 88B6E7B1 BBEFBC9A 50617265 6E7420E6 96B9E6B3 95736179 0C000F00 10010017 6A617661 2F6C616E 672F5374 72696E67 4275696C 64657201 001FE788 B6E7B1BB EFBC9A50 6172656E 7420E99D 99E68081 E4BBA3E7 A081E59D 970C0031 00320C00 3100330C 00340035 01001263 6C617373 6C6F6164 65722F50 6172656E 74010010 6A617661 2F6C616E 672F4F62 6A656374 0100106A 6176612F 6C616E67 2F537973 74656D01 00036F75 74010015 4C6A6176 612F696F 2F507269 6E745374 7265616D 3B010013 6A617661 2F696F2F 5072696E 74537472 65616D01 00077072 696E746C 6E010015 284C6A61 76612F6C 616E672F 53747269 6E673B29 56010006 61707065 6E640100 2D284C6A 6176612F 6C616E67 2F537472 696E673B 294C6A61 76612F6C 616E672F 53747269 6E674275 696C6465 723B0100 1C284929 4C6A6176 612F6C61 6E672F53 7472696E 67427569 6C646572 3B010008 746F5374 72696E67 01001428 294C6A61 76612F6C 616E672F 53747269 6E673B00 21000D00 0E000000 01000900 0F001000 00000300 01001100 12000100 13000000 3F000200 01000000 0D2AB700 01B20002 1203B600 04B10000 00020014 0000000E 00030000 00110004 0012000C 00130015 0000000C 00010000 000D0016 00170000 00010018 00120001 00130000 00370002 00010000 0009B200 021205B6 0004B100 00000200 14000000 0A000200 00001600 08001700 15000000 0C000100 00000900 16001700 00000800 19001200 01001300 00004000 03000000 00002004 B30006B2 0002BB00 0759B700 081209B6 000AB200 06B6000B B6000CB6 0004B100 00000100 14000000 0E000300 00000B00 04000E00 1F000F00 01001A00 00000200 1B
+警告: 二进制文件Parent包含classloader.Parent
+Classfile /Users/haochencheng/Workspace/java/java-interview/java-interview-basis/target/classes/classloader/Parent.class
+  Last modified 2019-6-23; size 889 bytes
+  MD5 checksum ef9781e7c739f3c463c8e55f31651d68
+  Compiled from "Parent.java"
+public class classloader.Parent
+  minor version: 0
+  major version: 49
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #14.#28        // java/lang/Object."<init>":()V
+   #2 = Fieldref           #29.#30        // java/lang/System.out:Ljava/io/PrintStream;
+   #3 = String             #31            // 父类：Parent 构造器
+   #4 = Methodref          #32.#33        // java/io/PrintStream.println:(Ljava/lang/String;)V
+   #5 = String             #34            // 父类：Parent 方法say
+   #6 = Fieldref           #13.#35        // classloader/Parent.A:I
+   #7 = Class              #36            // java/lang/StringBuilder
+   #8 = Methodref          #7.#28         // java/lang/StringBuilder."<init>":()V
+   #9 = String             #37            // 父类：Parent 静态代码块
+  #10 = Methodref          #7.#38         // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #11 = Methodref          #7.#39         // java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+  #12 = Methodref          #7.#40         // java/lang/StringBuilder.toString:()Ljava/lang/String;
+  #13 = Class              #41            // classloader/Parent
+  #14 = Class              #42            // java/lang/Object
+  #15 = Utf8               A
+  #16 = Utf8               I
+  #17 = Utf8               <init>
+  #18 = Utf8               ()V
+  #19 = Utf8               Code
+  #20 = Utf8               LineNumberTable
+  #21 = Utf8               LocalVariableTable
+  #22 = Utf8               this
+  #23 = Utf8               Lclassloader/Parent;
+  #24 = Utf8               say
+  #25 = Utf8               <clinit>
+  #26 = Utf8               SourceFile
+  #27 = Utf8               Parent.java
+  #28 = NameAndType        #17:#18        // "<init>":()V
+  #29 = Class              #43            // java/lang/System
+  #30 = NameAndType        #44:#45        // out:Ljava/io/PrintStream;
+  #31 = Utf8               父类：Parent 构造器
+  #32 = Class              #46            // java/io/PrintStream
+  #33 = NameAndType        #47:#48        // println:(Ljava/lang/String;)V
+  #34 = Utf8               父类：Parent 方法say
+  #35 = NameAndType        #15:#16        // A:I
+  #36 = Utf8               java/lang/StringBuilder
+  #37 = Utf8               父类：Parent 静态代码块
+  #38 = NameAndType        #49:#50        // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #39 = NameAndType        #49:#51        // append:(I)Ljava/lang/StringBuilder;
+  #40 = NameAndType        #52:#53        // toString:()Ljava/lang/String;
+  #41 = Utf8               classloader/Parent
+  #42 = Utf8               java/lang/Object
+  #43 = Utf8               java/lang/System
+  #44 = Utf8               out
+  #45 = Utf8               Ljava/io/PrintStream;
+  #46 = Utf8               java/io/PrintStream
+  #47 = Utf8               println
+  #48 = Utf8               (Ljava/lang/String;)V
+  #49 = Utf8               append
+  #50 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #51 = Utf8               (I)Ljava/lang/StringBuilder;
+  #52 = Utf8               toString
+  #53 = Utf8               ()Ljava/lang/String;
+{
+  public static int A;
+    descriptor: I
+    flags: ACC_PUBLIC, ACC_STATIC
+
+  public classloader.Parent();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         7: ldc           #3                  // String 父类：Parent 构造器
+         9: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        12: return
+      LineNumberTable:
+        line 17: 0
+        line 18: 4
+        line 19: 12
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      13     0  this   Lclassloader/Parent;
+
+  public void say();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: ldc           #5                  // String 父类：Parent 方法say
+         5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+         8: return
+      LineNumberTable:
+        line 22: 0
+        line 23: 8
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       9     0  this   Lclassloader/Parent;
+
+  static {};
+    descriptor: ()V
+    flags: ACC_STATIC
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_1
+         1: putstatic     #6                  // Field A:I
+         4: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         7: new           #7                  // class java/lang/StringBuilder
+        10: dup
+        11: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+        14: ldc           #9                  // String 父类：Parent 静态代码块
+        16: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        19: getstatic     #6                  // Field A:I
+        22: invokevirtual #11                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+        25: invokevirtual #12                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        28: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        31: return
+      LineNumberTable:
+        line 11: 0
+        line 14: 4
+        line 15: 31
+}
+SourceFile: "Parent.java"
 ```
 
 
@@ -739,7 +871,7 @@ CAFEBABE 00000031 00360A00 0E001C09 001D001E 08001F0A 00200021 08002209 000D0023
 
 2. **version字段**：
 
-   >00000031
+   >00000034
    >
    >前两个字节00是minor_version，后两个字节0034是major_version字段，对应的十进制值为52，也就是说当前class文件的主版本号为52，次版本号为0。下表是jdk 1.6 以后对应支持的 Class 文件版本号：
 
@@ -748,8 +880,18 @@ CAFEBABE 00000031 00360A00 0E001C09 001D001E 08001F0A 00200021 08002209 000D0023
 3. **常量池，constant_pool**
 
    > `constant_pool_count`
-   > 紧接着version字段下来的两个字节是：`00 12`代表常量池里包含的常量数目，因为字节码的常量池是从1开始计数的，这个常量池包含17个（0x0012-1）常量。
+   > 紧接着version字段下来的两个字节是：`00 36`代表常量池里包含的常量数目，因为字节码的常量池是从1开始计数的，这个常量池包含53个（0x0036-1）常量。
 
-   
 
-4. 
+
+
+###	
+
+###	用过哪些Map类，都有什么区别，HashMap是线程安全的吗,并发下使用的Map是什么，他们内部原理分别是什么，比如存储方式，hashcode，扩容，默认容量等。
+
+java集合框架顶层接口
+
+Collection,Map。
+
+HashMap 键值对数据结构,底层存储数组加链表结构。
+
