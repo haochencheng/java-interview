@@ -1,8 +1,9 @@
-import util.SwapUtil;
 
 import java.util.Arrays;
 
 /**
+ * 希尔排序这个名字，来源于它的发明者希尔，也称作“缩小增量排序”，是插入排序的一种更高效的改进版本。
+ *
  * @description:
  * @author: haochencheng
  * @create: 2019-06-29 19:14
@@ -16,22 +17,23 @@ public class ShellSort {
     }
 
     private static void sort(Integer[] array) {
-        //TODO understand
-        int number = array.length/2;
-        int tmp,i,j;
-        while (number>=1){
-            for (i = number; i < array.length; i++) {
+        int length = array.length;
+        int gap = length / 2;
+        int i, j, tmp;
+        while (gap > 0) {
+            for (i = gap; i < length; i++) {
                 tmp = array[i];
-                j = i - number;
-                while (j>=0 && array[j]>tmp){
-                    array[j + number] = array[j];
-                    j = j - number;
+                j = i - gap;
+                while (j >= 0 && array[j] > tmp) {
+                    array[j + gap] = array[j];
+                    j -= gap;
                 }
-                array[j + number] = tmp;
+                if (j != i - gap) {
+                    array[j + gap] = tmp;
+                }
             }
-            number = number / 2;
+            gap = gap / 2;
         }
-
     }
 
 }
