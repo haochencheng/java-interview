@@ -18,10 +18,19 @@ public class ShellSort {
 
     private static void sort(Integer[] array) {
         int length = array.length;
+        //步长
         int gap = length / 2;
+        //i右边元素 索引 ，j 左边元素索引 tmp 临时元素 用于交换
         int i, j, tmp;
         while (gap > 0) {
-            for (i = gap; i < length; i++) {
+            //1 2 3 4 5 6 7 8
+            // gap = 4
+            //   /  i -> 5 6 7 8
+            //   / j -> 1 2 3 4
+            // gap = 2
+            //   /  i ->
+            for (i = gap; i < length; i+=gap) {
+                System.out.println(i);
                 tmp = array[i];
                 j = i - gap;
                 while (j >= 0 && array[j] > tmp) {
@@ -32,6 +41,7 @@ public class ShellSort {
                     array[j + gap] = tmp;
                 }
             }
+            //步长减半
             gap = gap / 2;
         }
     }
