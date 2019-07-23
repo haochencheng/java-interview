@@ -4,3 +4,9 @@
 .idea/
 .iml
 *.iml
+
+.gradle
+build/
+target/
+java-interview-algorithm/.gradle
+*.class

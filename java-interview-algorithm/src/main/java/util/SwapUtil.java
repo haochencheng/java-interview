@@ -19,4 +19,11 @@ public class SwapUtil {
         x[a] = x[b];
         x[b] = t;
     }
+
+
+    public static <T> void swap(int[] x, int a, int b) {
+        int t = x[a];
+        x[a] = x[b];
+        x[b] = t;
+    }
 }
