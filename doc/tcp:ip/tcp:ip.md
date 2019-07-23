@@ -34,5 +34,29 @@
 
    用来处理连接网络的硬件部分。包括操作系统，设备的硬件驱动，NIC（Neetwork Interface Card，网络适配器，即网卡）以及光纤等物理可见部分（还包括连接器等一切传播介质）。硬件上的范畴都在链路层的作用范围之内。
 
-   
+传输图：
+
+![传输图](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tcp%3Aip/tcp%3Aip传输.png)
+
+
+
+####	负责传输的IP协议
+
+IP（Internet Protocol）网际协议位于网络层。ip协议的作用是吧各种数据包传送给对方，要确保正确的传送数据包，有两个重要的条件，IP和MAC地址（Media Access Control Address ）
+
+####	确保可靠性的TCP协议
+
+按层次分，tcp属于传输层，提供可靠地字节流服务。
+
+所谓的字节流服务（Byte Stream Service）是指，为了方便传输，将大块的数据分割成以报文段为单位的数据包进行管理。
+
+而可靠地传输服务是指，能够把数据准确可靠地传输给对方。
+
+**确保数据能够到达 **
+
+TCP采用三次握手（three-way handshaking ）策略，在把数据包送出去后，tcp会向对方确认是否送达成功。
+
+握手过程中使用 TCP的标志 （flag） SYN （synchronize）和 ACK （acknowledgement）。
+
+
 
