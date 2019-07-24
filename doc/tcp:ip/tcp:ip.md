@@ -58,5 +58,41 @@ TCP采用三次握手（three-way handshaking ）策略，在把数据包送出�
 
 握手过程中使用 TCP的标志 （flag） SYN （synchronize）和 ACK （acknowledgement）。
 
+![三次握手](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tcp%3Aip/三次握手.png)
+
+
+
+####	负载域名解析的DNS服务
+
+DNS（Domain Name System）服务和Http服务协议一样是位于应用层的协议。它提供域名到ip之间的解析服务。
+
+####	各种协议与Http协议的关系
+
+1.A请求 DNS 通过域名获取B的 ip
+
+2.http协议生成请求报文
+
+3.tcp协议方便传输，将http请求报文分割成报文段（按序号分割多个），把每个报文段可靠地传输给对方并接收ACK
+
+4.ip协议职责，搜索对方地址，一边中转一边传送
+
+
+
+####	URI URL
+
+URI是Uniform Resource Identifier 的缩写，是某个协议方案表示的资源定位标识符，协议方案是指访问资源所使用的协议类型名称。
+
+采用Http时协议方案就是http，还有ftp等30多种Uri协议方案。
+
+URL标识资源的地点（互联网上所处的位置） 是 URI的子集。
+
+http://www.ietf.org/rfc/a.txt
+
+ftp://ftp.os.za/rfc/a.txt
+
+####	Http协议
+
+http协议用于客户端和服务端之间的通讯，是无状态协议。
+
 
 
