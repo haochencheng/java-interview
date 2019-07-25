@@ -1,4 +1,4 @@
-package per.interview.tomcat.config;
+package pers.interview.tomcat.config;
 
 
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +18,7 @@ import javax.servlet.ServletRegistration;
  * @create: 2019-07-24 09:09
  **/
 @EnableWebMvc
-@ComponentScan("spring.with.nacos")
+@ComponentScan("pers.interview.tomcat")
 public class WebApplicationInitializerConfig implements WebApplicationInitializer {
 
     @Override

@@ -1,10 +1,9 @@
-package per.interview.tomcat.customerweb;
+package pers.interview.tomcat.customerweb;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 
 /**
  * 自定义web服务器
@@ -19,6 +18,8 @@ public class Server {
     // 关闭服务命令
     private static final String SHUTDOWN_COMMAND = "/shutDown";
 
+    private Boolean start=true;
+
     public static void main(String[] args) throws IOException {
         Server server = new Server();
         server.await();
@@ -27,14 +28,17 @@ public class Server {
     private void await() {
         ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(PORT, 1, InetAddress.getByName("127.0.0.1"));
+//            serverSocket = new ServerSocket(PORT, 1, InetAddress.getByName("127.0.0.1"));
+            serverSocket = new ServerSocket(PORT, 1, InetAddress.getByName("localhost"));
+//            serverSocket = new ServerSocket(PORT, 1, InetAddress.getByName("0.0.0.0"));
+//            serverSocket = new ServerSocket(PORT, 1, InetAddress.getByName("10.244.15.227"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         Socket socket;
         InputStream inputStream ;
         OutputStream outputStream ;
-        while (true) {
+        while (start) {
             try {
                 socket = serverSocket.accept();
                 //输入
@@ -44,7 +48,8 @@ public class Server {
                 outputStream = socket.getOutputStream();
                 // 用 writer 对客户端 socket 输出一段 HTML 代码
                 PrintWriter out = new PrintWriter(outputStream);
-                String response="HTTP/1.0 200 OK\r\nContent-Type:text/html\r\n\r\nhello,world!";
+                String response="HTTP/1.0 200 OK\r\nContent-Type:text/html\r\n\r\nhello,world!\r\n";
+                System.out.println(response);
                 out.println(response);
                 out.close();
                 // 关闭 socket 对象
@@ -75,6 +80,8 @@ public class Server {
         }
         System.out.print(request.toString());
     }
+
+
 
 
 }
