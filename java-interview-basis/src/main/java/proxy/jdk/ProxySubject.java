@@ -1,12 +1,9 @@
 package proxy.jdk;
 
-import org.springframework.cglib.core.DebuggingClassWriter;
-import org.springframework.cglib.proxy.Enhancer;
 import proxy.DupSubject;
 import proxy.RealSubject;
 import proxy.Subject;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -38,6 +35,15 @@ public class ProxySubject implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         //前置 增强处理
 //        System.out.printf("before %s.%s \n",method.getDeclaringClass().getSimpleName(),method.getName());
+        // jdk 1.7
+        //method.setAccessible(true);
+        // 不开 accessible jdk: 30952 ms, 45,556 t/s
+        //                jdk: 3693 ms, 270,782 t/s
+        //        jdk: 31446 ms, 44,840 t/s
+        // 开了 jdk: 35308 ms, 39,936 t/s
+        //     jdk: 3219 ms, 310,655 t/s
+        //     jdk: 34773 ms, 40,550 t/s
+        // 10w次 开了快 100w次 不开快 ？
         Object invoke = method.invoke(realSubject, args);
 //        System.out.printf("after %s.%s \r\n",method.getDeclaringClass().getSimpleName(),method.getName());
         //后置 增强处理
@@ -61,7 +67,7 @@ public class ProxySubject implements InvocationHandler {
 
     static class Test {
 
-        public static void main(String[] args) {
+        public static void main(String[] args) throws InterruptedException {
             int count = 10000000;
             Subject subject =(Subject) createJdkProxy();
             long time = System.currentTimeMillis();
@@ -70,6 +76,9 @@ public class ProxySubject implements InvocationHandler {
             }
             time = System.currentTimeMillis() - time;
             System.out.println("jdk: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
+            for (;;){
+                Thread.sleep(100);
+            }
         }
 
         private static Object createJdkProxy(){
@@ -80,6 +89,9 @@ public class ProxySubject implements InvocationHandler {
         }
     }
 
+
+    static class Gen {
+    }
 
 
 

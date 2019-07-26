@@ -51,6 +51,8 @@ public class ProxySubject implements MethodInterceptor {
         RealSubject realSubject1 = (RealSubject) enhancer.create();
         realSubject1.speak();
         realSubject1.speakAgain();
+        int i = 1_000_000;
+        System.out.println(i);
     }
 
     static class Test {
