@@ -68,7 +68,7 @@ public class ProxySubject implements InvocationHandler {
     static class Test {
 
         public static void main(String[] args) throws InterruptedException {
-            int count = 10000000;
+            int count = 10_000_000;
             Subject subject =(Subject) createJdkProxy();
             long time = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
@@ -76,9 +76,6 @@ public class ProxySubject implements InvocationHandler {
             }
             time = System.currentTimeMillis() - time;
             System.out.println("jdk: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
-            for (;;){
-                Thread.sleep(100);
-            }
         }
 
         private static Object createJdkProxy(){

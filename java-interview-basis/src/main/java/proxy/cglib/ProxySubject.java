@@ -51,14 +51,12 @@ public class ProxySubject implements MethodInterceptor {
         RealSubject realSubject1 = (RealSubject) enhancer.create();
         realSubject1.speak();
         realSubject1.speakAgain();
-        int i = 1_000_000;
-        System.out.println(i);
     }
 
     static class Test {
 
         public static void main(String[] args) {
-            int count = 10000000;
+            int count = 10_000_000;
             RealSubject realSubject =(RealSubject) createCjLibProxy();
             long time = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
