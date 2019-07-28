@@ -201,24 +201,32 @@ public class RealSubject$$EnhancerByCGLIB$$380576fd extends RealSubject implemen
 }
 ```
 ####    javassist
+1. javassist 提供的动态代理工场，生成代理类，调用 MethodHandler ，使用java反射
+性能比较低，主要是在反射上面。
 
-
+2. 自己生成代理类 直接调用
+性能高
 
 ####    性能测试
 
-1w
-    jdk: 104 ms, 96,153 t/s
-    cglib: 133 ms, 75,187 t/s
-    javassist: 154 ms, 64,935 t/s
-
 10w 
-    jdk: 373 ms, 268,096 t/s
-    cglib: 574 ms, 174,216 t/s
-    javassist: 847 ms, 118,063 t/s
+
+    [jdk-reflection-dynamic-proxy  9 ms, 11,111,111 t/s, 
+    cglib-reflection-dynamic-proxy  15 ms, 6,666,666 t/s, 
+    javassist-reflection-dynamic-proxy  14 ms, 7,142,857 t/s, 
+    javassist-bytecode-static-proxy  2 ms, 50,000,000 t/s
+    Process finished with exit code 0
+    static-inherit-static-proxy  8 ms, 12,500,000 t/s, 
+    static-interface-static-proxy  2 ms, 50,000,000 t/s]
 
 1000w
-    cglib: 28539 ms, 49,408 t/s
-    javassist: 54492 ms, 25,876 t/s
-    jdk: 27431 ms, 51,404 t/s
+
+    [jdk-reflection-dynamic-proxy  45 ms, 31,334,786 t/s, 
+    cglib-reflection-dynamic-proxy  147 ms, 9,592,281 t/s,
+    javassist-reflection-dynamic-proxy  149 ms, 9,463,526 t/s,
+    javassist-bytecode-reflection-dynamic-proxy  43 ms, 32,792,218 t/s
+    static-inherit-static-proxy  45 ms, 31,334,786 t/s, 
+    static-interface-static-proxy  65 ms, 21,693,313 t/s]
     
-    
+可见jdk8 jdk动态代理、javassist-bytecode 性能和直接调用差不多，
+jdk8 优化了动态代理 ，反射调用超过15次后，使用MethodAccessorGenerator 生成代理类 字节码很少，接近 直接调用。    

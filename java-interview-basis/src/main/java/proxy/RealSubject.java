@@ -15,6 +15,6 @@ public class RealSubject implements Subject, DupSubject {
 
     @Override
     public void speak() {
-        System.out.println("Subject speak");
+//        System.out.println("Subject speak");
     }
 }

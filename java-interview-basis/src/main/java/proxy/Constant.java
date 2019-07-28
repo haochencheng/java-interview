@@ -21,8 +21,8 @@ public class Constant {
         }
     }
 
-    public static final String DYNAMIC_PROXY="reflection-dynamic-proxy";
-    public static final String STATIC_PROXY="static-proxy";
+    public static final String DYNAMIC_PROXY="-reflection-dynamic-proxy";
+    public static final String STATIC_PROXY="-static-proxy";
 
 
 

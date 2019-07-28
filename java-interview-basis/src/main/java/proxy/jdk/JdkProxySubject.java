@@ -15,7 +15,7 @@ import java.text.DecimalFormat;
  * @author: haochencheng
  * @create: 2019-07-25 14:35
  **/
-public class ProxySubject implements InvocationHandler {
+public class JdkProxySubject implements InvocationHandler {
 
     private Object realSubject;
 
@@ -54,9 +54,9 @@ public class ProxySubject implements InvocationHandler {
     public static void main(String[] args) throws Exception {
         // 设置系统参数，输出动态生成的代理类
         System.setProperty("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
-        ProxySubject proxySubject=new ProxySubject();
+        JdkProxySubject jdkProxySubject =new JdkProxySubject();
         //获取代理类
-        Object proxySubjectTarget = proxySubject.getProxySubject(new RealSubject());
+        Object proxySubjectTarget = jdkProxySubject.getProxySubject(new RealSubject());
 
         Subject subject =(Subject) proxySubjectTarget;
         //代理类调用指定 方法
@@ -89,15 +89,9 @@ public class ProxySubject implements InvocationHandler {
 
     public static Object createJdkProxy(){
         //获取代理类
-        ProxySubject proxySubject=new ProxySubject();
-        Object proxySubjectTarget = proxySubject.getProxySubject(new RealSubject());
+        JdkProxySubject jdkProxySubject =new JdkProxySubject();
+        Object proxySubjectTarget = jdkProxySubject.getProxySubject(new RealSubject());
         return proxySubjectTarget;
     }
-
-
-    static class Gen {
-    }
-
-
 
 }

@@ -14,9 +14,9 @@ import java.text.DecimalFormat;
  * @author: haochencheng
  * @create: 2019-07-25 18:39
  **/
-public class ProxySubject {
+public class JavassistProxySubject {
 
-    public static RealSubject getJavassistProxy() throws IllegalAccessException, InstantiationException {
+    public static RealSubject createJavassistProxy() throws IllegalAccessException, InstantiationException {
         ProxyFactory proxyFactory = new ProxyFactory();
         proxyFactory.setSuperclass(RealSubject.class);
         proxyFactory.setFilter(m -> {
@@ -24,10 +24,7 @@ public class ProxySubject {
             return !m.getName().equals("finalize");
         });
         Class c = proxyFactory.createClass();
-        MethodHandler methodHandler = (self, thisMethod, proceed, args) -> {
-            System.out.println("method name: " + thisMethod.getName() + " exec");
-            return proceed.invoke(self, args);
-        };
+        MethodHandler methodHandler = (self, thisMethod, proceed, args) -> proceed.invoke(self, args);
         Object proxy = c.newInstance();
         ((Proxy) proxy).setHandler(methodHandler);
         return (RealSubject) proxy;
@@ -37,7 +34,7 @@ public class ProxySubject {
 
         public static void main(String[] args) throws InstantiationException, IllegalAccessException, InterruptedException {
             int count = Constant.TH_W;
-            RealSubject realSubject = getJavassistProxy();
+            RealSubject realSubject = createJavassistProxy();
             long time = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
                 realSubject.speak();

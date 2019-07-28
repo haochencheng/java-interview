@@ -4,23 +4,21 @@ import org.springframework.cglib.core.DebuggingClassWriter;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
-import proxy.Constant;
 import proxy.RealSubject;
 
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
 
 /**
  * @description:
  * @author: haochencheng
  * @create: 2019-07-25 18:39
  **/
-public class ProxySubject implements MethodInterceptor {
+public class CjlibProxySubject implements MethodInterceptor {
 
     private Object target;
 
     // 持有被代理对象
-    public ProxySubject(Object target) {
+    public CjlibProxySubject(Object target) {
         this.target = target;
     }
 
@@ -40,41 +38,24 @@ public class ProxySubject implements MethodInterceptor {
 
     public static void main(String[] args) {
         // 设置系统参数，输出动态生成的代理类
-        String path = ProxySubject.class.getResource("").getPath();
+        String path = CjlibProxySubject.class.getResource("").getPath();
         System.out.printf("生成代理类路径：{%s}",path);
         System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, path);
         RealSubject realSubject = new RealSubject();
-        ProxySubject proxySubject = new ProxySubject(realSubject);
+        CjlibProxySubject cjLibProxySubject = new CjlibProxySubject(realSubject);
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(realSubject.getClass());
-        enhancer.setCallback(proxySubject);
+        enhancer.setCallback(cjLibProxySubject);
         //代理对象
         RealSubject realSubject1 = (RealSubject) enhancer.create();
         realSubject1.speak();
         realSubject1.speakAgain();
     }
 
-    static class Test {
-
-        public static void main(String[] args) throws InterruptedException {
-            int count = Constant.TH_W;                                                                                                                                                                                                                                                                                                                                              ;
-            RealSubject realSubject =(RealSubject) createCjLibProxy();
-            long time = System.currentTimeMillis();
-            for (int i = 0; i < count; i++) {
-                realSubject.speak();
-            }
-            time = System.currentTimeMillis() - time;
-            System.out.println("cglib: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
-            Constant.debug();
-        }
-
-
-    }
-
     public static Object createCjLibProxy(){
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(RealSubject.class);
-        enhancer.setCallback(new ProxySubject(new RealSubject()));
+        enhancer.setCallback(new CjlibProxySubject(new RealSubject()));
         //代理对象
         return enhancer.create();
     }

@@ -33,11 +33,11 @@ public class StaticInterfaceProxySubject implements Subject, DupSubject {
     }
 
     private void before(){
-        System.out.println("before");
+//        System.out.println("before");
     }
 
     private void after(){
-        System.out.println("after");
+//        System.out.println("after");
     }
 
     public static void main(String[] args) {

@@ -8,7 +8,7 @@ import java.lang.reflect.*;
 
 /**
  * jdk生成的代理类
- * @see proxy.jdk.ProxySubject
+ * @see JdkProxySubject
  * @description:
  * @author: haochencheng
  * @create: 2019-07-25 15:34
