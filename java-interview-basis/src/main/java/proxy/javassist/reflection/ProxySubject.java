@@ -1,9 +1,8 @@
-package proxy.javassist;
+package proxy.javassist.reflection;
 
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.Proxy;
 import javassist.util.proxy.ProxyFactory;
-import org.springframework.cglib.proxy.Enhancer;
 import proxy.Constant;
 import proxy.RealSubject;
 
@@ -17,9 +16,9 @@ import java.text.DecimalFormat;
  **/
 public class ProxySubject {
 
-    public static Object getProxy(Class<?> cl) throws IllegalAccessException, InstantiationException {
+    public static RealSubject getJavassistProxy() throws IllegalAccessException, InstantiationException {
         ProxyFactory proxyFactory = new ProxyFactory();
-        proxyFactory.setSuperclass(cl);
+        proxyFactory.setSuperclass(RealSubject.class);
         proxyFactory.setFilter(m -> {
             // ignore finalize()
             return !m.getName().equals("finalize");
@@ -31,25 +30,24 @@ public class ProxySubject {
         };
         Object proxy = c.newInstance();
         ((Proxy) proxy).setHandler(methodHandler);
-        return proxy;
+        return (RealSubject) proxy;
     }
 
     static class Test {
 
         public static void main(String[] args) throws InstantiationException, IllegalAccessException, InterruptedException {
-            int count = Constant.W;
-            RealSubject realSubject =(RealSubject) getProxy(RealSubject.class);
+            int count = Constant.TH_W;
+            RealSubject realSubject = getJavassistProxy();
             long time = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
                 realSubject.speak();
             }
             time = System.currentTimeMillis() - time;
-            System.out.println("javassist: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
+            System.out.println("javassist-reflection: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
             Constant.debug();
         }
 
     }
-
 
 
 }

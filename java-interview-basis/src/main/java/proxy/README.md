@@ -179,6 +179,7 @@ ProxyGenerator 生成java 字节码
 cglib 基于 java 继承和 MethodInterceptor 回调
 生成的代理类中 有MethodInterceptor 引用，在MethodInterceptor.invoke中实现方法增强
 继承被代理对象，通过重写父类方法，在其中调用Callback回调，在回调中进行方法增强
+疑问？ cglib 也是基于反射 为什么运行速度比java 快。
 ```java
 public class RealSubject$$EnhancerByCGLIB$$380576fd extends RealSubject implements Factory {
 
@@ -199,3 +200,25 @@ public class RealSubject$$EnhancerByCGLIB$$380576fd extends RealSubject implemen
     
 }
 ```
+####    javassist
+
+
+
+####    性能测试
+
+1w
+    jdk: 104 ms, 96,153 t/s
+    cglib: 133 ms, 75,187 t/s
+    javassist: 154 ms, 64,935 t/s
+
+10w 
+    jdk: 373 ms, 268,096 t/s
+    cglib: 574 ms, 174,216 t/s
+    javassist: 847 ms, 118,063 t/s
+
+1000w
+    cglib: 28539 ms, 49,408 t/s
+    javassist: 54492 ms, 25,876 t/s
+    jdk: 27431 ms, 51,404 t/s
+    
+    

@@ -69,23 +69,29 @@ public class ProxySubject implements InvocationHandler {
     static class Test {
 
         public static void main(String[] args) throws InterruptedException {
-            int count = Constant.W;
-            Subject subject =(Subject) createJdkProxy();
-            long time = System.currentTimeMillis();
-            for (int i = 0; i < count; i++) {
-                subject.speak();
-            }
-            time = System.currentTimeMillis() - time;
-            System.out.println("jdk: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
-            Constant.debug();
+            test();
+            return;
         }
 
-        private static Object createJdkProxy(){
-            //获取代理类
-            ProxySubject proxySubject=new ProxySubject();
-            Object proxySubjectTarget = proxySubject.getProxySubject(new RealSubject());
-            return proxySubjectTarget;
+    }
+
+    private static void test() throws InterruptedException {
+        int count = Constant.TH_W;
+        Subject subject =(Subject) createJdkProxy();
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < count; i++) {
+            subject.speak();
         }
+        time = System.currentTimeMillis() - time;
+        System.out.println("jdk-reflection-dynamic-proxy: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
+        Constant.debug();
+    }
+
+    public static Object createJdkProxy(){
+        //获取代理类
+        ProxySubject proxySubject=new ProxySubject();
+        Object proxySubjectTarget = proxySubject.getProxySubject(new RealSubject());
+        return proxySubjectTarget;
     }
 
 

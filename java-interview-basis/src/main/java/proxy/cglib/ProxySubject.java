@@ -57,7 +57,7 @@ public class ProxySubject implements MethodInterceptor {
     static class Test {
 
         public static void main(String[] args) throws InterruptedException {
-            int count = Constant.W;
+            int count = Constant.TH_W;                                                                                                                                                                                                                                                                                                                                              ;
             RealSubject realSubject =(RealSubject) createCjLibProxy();
             long time = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
@@ -68,13 +68,15 @@ public class ProxySubject implements MethodInterceptor {
             Constant.debug();
         }
 
-        private static Object createCjLibProxy(){
-            Enhancer enhancer = new Enhancer();
-            enhancer.setSuperclass(RealSubject.class);
-            enhancer.setCallback(new ProxySubject(new RealSubject()));
-            //代理对象
-            return enhancer.create();
-        }
+
+    }
+
+    public static Object createCjLibProxy(){
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(RealSubject.class);
+        enhancer.setCallback(new ProxySubject(new RealSubject()));
+        //代理对象
+        return enhancer.create();
     }
 
     /**
