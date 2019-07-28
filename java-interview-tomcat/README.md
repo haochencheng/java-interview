@@ -116,3 +116,19 @@ public class StandardPipeline extends LifecycleBase
        
 }
 ```
+
+### tomcagt 中组件说明
+            
+| 组件        | 说明    | 
+| --------   | -----:   |
+| Server        | 表示整个servlet容器，因此tomcat运行环境中只有唯一一个Server实例       |   
+| Service        | Service表示一个或多个Connector集合，这些Connector共享一个Container来处理其请求，
+在同一个Tomcat中可以包含任意多个Service，他们彼此独立      |   
+| Connector        | Tomcat链接器 ，用于监听并转化Socket请求，同时将读取的socket请求交于Container处理，支持不同的协议以及I/O方式     |   
+| | |
+
+
+### tomcat 类加载器
+
+
+

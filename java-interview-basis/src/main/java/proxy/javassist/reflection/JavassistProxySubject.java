@@ -30,21 +30,4 @@ public class JavassistProxySubject {
         return (RealSubject) proxy;
     }
 
-    static class Test {
-
-        public static void main(String[] args) throws InstantiationException, IllegalAccessException, InterruptedException {
-            int count = Constant.TH_W;
-            RealSubject realSubject = createJavassistProxy();
-            long time = System.currentTimeMillis();
-            for (int i = 0; i < count; i++) {
-                realSubject.speak();
-            }
-            time = System.currentTimeMillis() - time;
-            System.out.println("javassist-reflection: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
-            Constant.debug();
-        }
-
-    }
-
-
 }

@@ -1,6 +1,8 @@
 ### java 反射
 java反射 调用 通过Method.invoke 委托给sun.reflect.MethodAccessor 来处理
 jdk1.6中反射安全校验中存在synchronized锁 性能较差 jdk 8中移除
+反射log 参考R大 写的很详细了  https://rednaxelafx.iteye.com/blog/548536
+
 ```java
 //jdk1.8
 public final class Method extends Executable {
@@ -404,5 +406,5 @@ public class GeneratedMethodAccessor1 extends MethodAccessorImpl {
 
 ```
 可以看到jdk生成的 反射调用 代理类 很简单，和直接调用相差无几。
-多了一些校验 如 类型转换校验 
+多了一些校验 如 类型转换校验 非空校验等
 13: checkcast 6	proxy/Subject
