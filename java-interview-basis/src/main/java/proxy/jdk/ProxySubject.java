@@ -1,5 +1,6 @@
 package proxy.jdk;
 
+import proxy.Constant;
 import proxy.DupSubject;
 import proxy.RealSubject;
 import proxy.Subject;
@@ -68,7 +69,7 @@ public class ProxySubject implements InvocationHandler {
     static class Test {
 
         public static void main(String[] args) throws InterruptedException {
-            int count = 10_000_000;
+            int count = Constant.W;
             Subject subject =(Subject) createJdkProxy();
             long time = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
@@ -76,6 +77,7 @@ public class ProxySubject implements InvocationHandler {
             }
             time = System.currentTimeMillis() - time;
             System.out.println("jdk: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
+            Constant.debug();
         }
 
         private static Object createJdkProxy(){

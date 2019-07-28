@@ -176,4 +176,26 @@ ProxyGenerator 生成java 字节码
 ```
 
 ####    cglib 动态代理
-cglib 基于 java 继承
+cglib 基于 java 继承和 MethodInterceptor 回调
+生成的代理类中 有MethodInterceptor 引用，在MethodInterceptor.invoke中实现方法增强
+继承被代理对象，通过重写父类方法，在其中调用Callback回调，在回调中进行方法增强
+```java
+public class RealSubject$$EnhancerByCGLIB$$380576fd extends RealSubject implements Factory {
+
+    
+     public final void speak() {
+            MethodInterceptor var10000 = this.CGLIB$CALLBACK_0;
+            if (var10000 == null) {
+                CGLIB$BIND_CALLBACKS(this);
+                var10000 = this.CGLIB$CALLBACK_0;
+            }
+    
+            if (var10000 != null) {
+                var10000.intercept(this, CGLIB$speak$1$Method, CGLIB$emptyArgs, CGLIB$speak$1$Proxy);
+            } else {
+                super.speak();
+            }
+        }
+    
+}
+```

@@ -4,6 +4,7 @@ import org.springframework.cglib.core.DebuggingClassWriter;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
+import proxy.Constant;
 import proxy.RealSubject;
 
 import java.lang.reflect.Method;
@@ -55,8 +56,8 @@ public class ProxySubject implements MethodInterceptor {
 
     static class Test {
 
-        public static void main(String[] args) {
-            int count = 10_000_000;
+        public static void main(String[] args) throws InterruptedException {
+            int count = Constant.W;
             RealSubject realSubject =(RealSubject) createCjLibProxy();
             long time = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
@@ -64,6 +65,7 @@ public class ProxySubject implements MethodInterceptor {
             }
             time = System.currentTimeMillis() - time;
             System.out.println("cglib: " + time + " ms, " + new DecimalFormat().format(count * 1000 / time) + " t/s");
+            Constant.debug();
         }
 
         private static Object createCjLibProxy(){

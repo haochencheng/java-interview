@@ -296,7 +296,7 @@ class MethodAccessorGenerator extends AccessorGenerator {
 MethodAccessorGenerator 生成的代理类，怎么做呢。
 
 
-使用 ``java -cp $JAVA_HOME/lib/sa-jdi.jar sun.jvm.hotspot.HSDB`` 命令 
+使用 ``sudo java -cp $JAVA_HOME/lib/sa-jdi.jar sun.jvm.hotspot.HSDB`` 命令 
 jps 查看pid 
 点击File->Attach to...输入pid
 点击 Tools -> Class Browser
