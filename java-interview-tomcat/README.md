@@ -118,7 +118,7 @@ public class StandardPipeline extends LifecycleBase
 }
 ```
 
-### tomcagt 中组件说明
+### tomcat 中组件说明
             
 | 组件        | 说明    | 
 | --------   | -----:   |
