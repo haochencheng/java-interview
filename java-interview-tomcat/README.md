@@ -307,6 +307,8 @@ tomcat分层图
 Catalina对web应用的加载主要由StandardHost、HostConfig、StandardContext、Context-config、StandardWrapper
 这5个类完成
 
+TODO ...
+
 
 ### coyote
 Coyote是tomcat链接器框架的名称，是tomcat服务器提供的供客户端访问的外部接口。
@@ -326,3 +328,7 @@ NIO：采用java NIO类库实现
 NOI2：采用JDK7最新NOI2库实现
 APR：采用apache APR实现。是C++编写的本地库，如果使用需本地安装 APR
 
+![tomcat-transport](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tomcat/tomcat-transport.png)
+
+
+### Web 请求处理
