@@ -1,8 +1,9 @@
 # java-interview-tomcat
+tomcat笔记
+
+####    tomcat中组件
 一个Server包含多个Service，一个Service维护多个Connector和Engine，一个Engine包含多个Host（虚拟主机），一个Host包含多个Context（应用），
 一个Context包含多个Wrapper（servlet定义）
-
-
 
 
 ####    Pipeline （管道）和 Value（阀）
@@ -244,6 +245,15 @@ public abstract class ClassLoader {
 - 初始化子类的时候，会触发父类的初始化。
 - 作为程序入口直接运行时（也就是直接调用main方法）。
 
+####    卸载
+　由Java虚拟机自带的类加载器所加载的类，在虚拟机的生命周期中，始终不会被卸载。
+1. 该类所有的实例都已经被回收，也就是java堆中不存在该类的任何实例。
+2. 加载该类的ClassLoader已经被回收。
+3. 该类对应的java.lang.Class对象没有任何地方被引用，无法在任何地方通过反射访问该类的方法。
+
+    
+    如果以上三个条件全部满足，jvm就会在方法区垃圾回收的时候对类进行卸载，类的卸载过程其实就是在方法区中清空类信息，java类的整个生命周期就结束了。
+
 ### tomcat 类加载器
 servlet规范要求每个web应用程序都有一个类加载器
 
@@ -263,4 +273,43 @@ servlet规范要求每个web应用程序都有一个类加载器
     
     每个应用程序都有一个类加载器，不用搜索其他应用程序jar包    
 
+
+![tomcat-classLoader](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tomcat/tomcat-classloader.png)
+
+tomcat提供了三个基础的类加载器和web应用类加载器
+- Common
+    以System为父的类加载器，位于tomcat应用服务器顶层的公用加载器。
+器路径为common.loader,默认只想$CATALINA_HOME/lib下的包。
+
+- Catalina
+    以Common为父加载器，是用于加载Tomcat应用服务器的类加载器
+其路径为server.loader,默认为空。此时tomcat使用Common类加载器
+
+- Shared
+    以Common为父加载器，是所有web Application的父加载器，
+    其路径为shared.loader.默认为空，此时使用Common类加载器
+
+- web应用
+
+    以shared为父加载器，加载/WEB-INF/class 下的未压缩class和资源文件
+    以及/WEB-INF/lib 目录下的jar包，只对当前应用可见，对其他应用不可见。
     
+
+### Catalina
+tomcat分层图
+![tomcat-layer](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tomcat/tomcat-layer.png)
+
+
+#### 创建Server
+ Catalina 使用 digester 解析Server.xml创建Server。
+ 
+### web应用加载
+Catalina对web应用的加载主要由StandardHost、HostConfig、StandardContext、Context-config、StandardWrapper
+这5个类完成
+
+
+### coyote
+Coyote是tomcat链接器框架的名称，是tomcat服务器提供的供客户端访问的外部接口。
+客户端通过Coyote与服务器建立链接，发送请求并接收响应。
+
+ 
