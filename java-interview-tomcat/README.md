@@ -2,6 +2,9 @@
 tomcat笔记
 
 ####    tomcat中组件
+
+![java类加载器](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tomcat/tomcat-design.png)
+
 一个Server包含多个Service，一个Service维护多个Connector和Engine，一个Engine包含多个Host（虚拟主机），一个Host包含多个Context（应用），
 一个Context包含多个Wrapper（servlet定义）
 
@@ -126,7 +129,13 @@ public class StandardPipeline extends LifecycleBase
 | Service        | Service表示一个或多个Connector集合，这些Connector共享一个Container来处理其请求，
 在同一个Tomcat中可以包含任意多个Service，他们彼此独立      |   
 | Connector        | Tomcat链接器 ，用于监听并转化Socket请求，同时将读取的socket请求交于Container处理，支持不同的协议以及I/O方式     |   
-| | |
+| Container |  Container 表示能够执行客户端请求并返回响应的一类对象 ，在tomcat中存在不同级别的容器,Engine、Host、Context、Wrapper |
+| Engine | Engine表示整个servlet引擎，在Tomcat中，Engine为最高层级的容器对象，尽管Engine不是直接处理请求的容器，但确是获取目标容器的入口 |
+| Host | Host作为一类容器，表示Servlet引擎（Engine）中的虚拟机，与一个服务器的网络名有关，如域名等，客户端可以使用这个网络名连接服务器，这个名称必须在DNS服务器注册 |
+| Context | Context作为一类容器，表示ServletContext，在servlet规范中，一个ServletContext表示一个独立的web应用 |
+| Wrapper | Wrapper作为一类容器，用于表示Web应用中定义的servlet |
+| Executor | 表示Tomcat组件可共享的线程池 |
+
 
 
 ### java类加载器
@@ -309,6 +318,10 @@ Catalina对web应用的加载主要由StandardHost、HostConfig、StandardContex
 
 TODO ...
 
+### Web 请求处理
+tomcat通过org.apache.catalina.mapper.Mapper维护请求连接与Host、Context、Wrapper等Container的映射。
+MapperListener监听所有的
+
 
 ### coyote
 Coyote是tomcat链接器框架的名称，是tomcat服务器提供的供客户端访问的外部接口。
@@ -331,4 +344,4 @@ APR：采用apache APR实现。是C++编写的本地库，如果使用需本地�
 ![tomcat-transport](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tomcat/tomcat-transport.png)
 
 
-### Web 请求处理
+
