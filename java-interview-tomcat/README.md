@@ -312,4 +312,17 @@ Catalina对web应用的加载主要由StandardHost、HostConfig、StandardContex
 Coyote是tomcat链接器框架的名称，是tomcat服务器提供的供客户端访问的外部接口。
 客户端通过Coyote与服务器建立链接，发送请求并接收响应。
 
- 
+![tomcat-coyote](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tomcat/tomcat-coyote.png)
+
+在Coyote中tomcat支持三种协议，
+1. HTTP/1.1 
+2. HTTP/2.0 (tomcat8.5以后版本开始支持)
+3. AJP协议
+
+针对HTTP协议和AJP协议，tomcat又按照不同的I/O方式分别通过了不同的选择方案
+tomcat8.5版本开始溢出了对BIO的支持
+
+NIO：采用java NIO类库实现
+NOI2：采用JDK7最新NOI2库实现
+APR：采用apache APR实现。是C++编写的本地库，如果使用需本地安装 APR
+
