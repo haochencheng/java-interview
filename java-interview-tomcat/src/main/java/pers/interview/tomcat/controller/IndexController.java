@@ -16,4 +16,15 @@ public class IndexController {
         return "hello,world!";
     }
 
+    @GetMapping("/bb/cc")
+    public String aa(){
+        return "bb/cc";
+    }
+
+    @GetMapping("/cc")
+    public String bb(){
+        return "/cc";
+    }
+
+
 }

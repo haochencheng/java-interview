@@ -31,6 +31,6 @@ public class WebApplicationInitializerConfig implements WebApplicationInitialize
         // Create the dispatcher servlet's Spring application context
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(rootContext));
         dispatcher.setLoadOnStartup(1);
-        dispatcher.addMapping("/");
+        dispatcher.addMapping("/aa/*");
     }
 }

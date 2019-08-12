@@ -320,7 +320,600 @@ TODO ...
 
 ### Web 请求处理
 tomcat通过org.apache.catalina.mapper.Mapper维护请求连接与Host、Context、Wrapper等Container的映射。
-MapperListener监听所有的
+MapperListener监听所有的Host、Context、Wrapper组件，有关组件启动、停止时注册或移除相关组件。
+
+通过org.apache.catalina.connector.CoyoteAdapter 将Connector和Mapper、Container联系起来。
+当Connector接收到请求后，首先读取数据，然后调用CoyoteAdapter.service()方法完成请求处理
+
+service()中处理流程：
+1. 将请求中 org.apache.coyote.Request req, org.apache.coyote.Response res转换成
+    org.apache.catalina.connector.Request 、Response
+2. 转换请求参数并完成映射 
+   postParseSuccess = postParseRequest(req, request, res, response);
+   
+3. 得到当前Engine中的第一个Value并执行（invoke），完成客户端请求处理。
+    因为Engine中的Pipeline是Value的责任链，从第一个执行到最后一个，最后一个basic（）处理请求。
+4. 第一个 Value -> StandardEngineValve  
+
+StandardEngineValve -> StandardHostValve  
+ -> StanderContextValue -> StandardWrapperValve
+
+
+StandardWrapperValve.invoke 调用具体servlet 请求。
+```java
+
+final class StandardWrapperValve
+    extends ValveBase {
+    
+     // 看下主要流程
+     @Override
+        public final void invoke(Request request, Response response)
+            throws IOException, ServletException {
+         
+         // 申请一个servlet 处理请求
+            if (!unavailable) {
+                servlet = wrapper.allocate();
+            }
+            
+         // Create the filter chain for this request
+        ApplicationFilterChain filterChain =
+                ApplicationFilterFactory.createFilterChain(request, wrapper, servlet);
+    
+        // ...
+        if (request.isAsyncDispatching()) {
+            request.getAsyncContextInternal().doInternalDispatch();
+        } else {
+            filterChain.doFilter(request.getRequest(),
+                    response.getResponse());
+        }
+     }
+
+}
+```
+
+ApplicationFilterChain.doFilter ->  servlet.service(request, response);
+
+-> FrameworkServlet.service(request, response); -> 	processRequest(request, response);
+
+-> DispatcherServlet.service -> DispatcherServlet.doDispatch(request, response);
+
+```java
+public class DispatcherServlet extends FrameworkServlet {
+
+    protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //... 
+        
+        mappedHandler = getHandler(processedRequest);
+        
+        //...
+        // Determine handler adapter for the current request.
+        HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+
+        
+        // Actually invoke the handler.
+        mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+
+    }
+    
+
+}
+
+
+```
+
+ha.handler() -> AbstractHandlerMethodAdapter.handler() 
+-> RequestMappingHandlerAdapter.handleInternal
+-> RequestMappingHandlerAdapter.invokeHandlerMethod
+...
+反射调用实现类
+-> InvocableHandlerMethod.doInvoke { return getBridgedMethod().invoke(getBean(), args); }
+	
+-> Controller 处理业务逻辑
+	
+
+```java
+package org.apache.catalina.connector;
+
+public class CoyoteAdapter implements Adapter {
+
+    
+    @Override
+        public void service(org.apache.coyote.Request req, org.apache.coyote.Response res)
+                throws Exception {
+    
+            // 1. 转换请求参数
+            Request request = (Request) req.getNote(ADAPTER_NOTES);
+            Response response = (Response) res.getNote(ADAPTER_NOTES);
+    
+            // ...
+            
+            try {
+                // Parse and set Catalina and configuration specific
+                // request parameters
+                postParseSuccess = postParseRequest(req, request, res, response);
+                if (postParseSuccess) {
+                    //check valves if we support async
+                    request.setAsyncSupported(
+                            connector.getService().getContainer().getPipeline().isAsyncSupported());
+                    // Calling the container
+                    connector.getService().getContainer().getPipeline().getFirst().invoke(
+                            request, response);
+                }
+                if (request.isAsync()) {
+                    async = true;
+                    ReadListener readListener = req.getReadListener();
+                    if (readListener != null && request.isFinished()) {
+                        // Possible the all data may have been read during service()
+                        // method so this needs to be checked here
+                        ClassLoader oldCL = null;
+                        try {
+                            oldCL = request.getContext().bind(false, null);
+                            if (req.sendAllDataReadEvent()) {
+                                req.getReadListener().onAllDataRead();
+                            }
+                        } finally {
+                            request.getContext().unbind(false, oldCL);
+                        }
+                    }
+    
+                    Throwable throwable =
+                            (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+    
+                    // If an async request was started, is not going to end once
+                    // this container thread finishes and an error occurred, trigger
+                    // the async error process
+                    if (!request.isAsyncCompleting() && throwable != null) {
+                        request.getAsyncContextInternal().setErrorState(throwable, true);
+                    }
+                } else {
+                    request.finishRequest();
+                    response.finishResponse();
+                }
+    
+            } catch (IOException e) {
+                // Ignore
+            } finally {
+                AtomicBoolean error = new AtomicBoolean(false);
+                res.action(ActionCode.IS_ERROR, error);
+    
+                if (request.isAsyncCompleting() && error.get()) {
+                    // Connection will be forcibly closed which will prevent
+                    // completion happening at the usual point. Need to trigger
+                    // call to onComplete() here.
+                    res.action(ActionCode.ASYNC_POST_PROCESS,  null);
+                    async = false;
+                }
+    
+                // Access log
+                if (!async && postParseSuccess) {
+                    // Log only if processing was invoked.
+                    // If postParseRequest() failed, it has already logged it.
+                    Context context = request.getContext();
+                    Host host = request.getHost();
+                    // If the context is null, it is likely that the endpoint was
+                    // shutdown, this connection closed and the request recycled in
+                    // a different thread. That thread will have updated the access
+                    // log so it is OK not to update the access log here in that
+                    // case.
+                    // The other possibility is that an error occurred early in
+                    // processing and the request could not be mapped to a Context.
+                    // Log via the host or engine in that case.
+                    long time = System.currentTimeMillis() - req.getStartTime();
+                    if (context != null) {
+                        context.logAccess(request, response, time, false);
+                    } else if (response.isError()) {
+                        if (host != null) {
+                            host.logAccess(request, response, time, false);
+                        } else {
+                            connector.getService().getContainer().logAccess(
+                                    request, response, time, false);
+                        }
+                    }
+                }
+    
+                req.getRequestProcessor().setWorkerThreadName(null);
+    
+                // Recycle the wrapper request and response
+                if (!async) {
+                    updateWrapperErrorCount(request, response);
+                    request.recycle();
+                    response.recycle();
+                }
+            }
+        }
+        
+        
+        
+        
+        
+}
+```
+
+匹配servlet 映射路径算法
+
+```java
+public final class Mapper {
+    
+    /**
+    * 添加Wrapper
+    * @param context
+    * @param path
+    * @param wrapper
+    * @param jspWildCard
+    * @param resourceOnly
+    */
+    protected void addWrapper(ContextVersion context, String path,
+                Wrapper wrapper, boolean jspWildCard, boolean resourceOnly) {
+    
+            synchronized (context) {
+                if (path.endsWith("/*")) {
+                    // Wildcard wrapper 对应 模糊匹配
+                    String name = path.substring(0, path.length() - 2);
+                    MappedWrapper newWrapper = new MappedWrapper(name, wrapper,
+                            jspWildCard, resourceOnly);
+                    MappedWrapper[] oldWrappers = context.wildcardWrappers;
+                    MappedWrapper[] newWrappers = new MappedWrapper[oldWrappers.length + 1];
+                    if (insertMap(oldWrappers, newWrappers, newWrapper)) {
+                        context.wildcardWrappers = newWrappers;
+                        int slashCount = slashCount(newWrapper.name);
+                        if (slashCount > context.nesting) {
+                            context.nesting = slashCount;
+                        }
+                    }
+                } else if (path.startsWith("*.")) {
+                    // Extension wrapper 扩展名匹配
+                    String name = path.substring(2);
+                    MappedWrapper newWrapper = new MappedWrapper(name, wrapper,
+                            jspWildCard, resourceOnly);
+                    MappedWrapper[] oldWrappers = context.extensionWrappers;
+                    MappedWrapper[] newWrappers =
+                        new MappedWrapper[oldWrappers.length + 1];
+                    if (insertMap(oldWrappers, newWrappers, newWrapper)) {
+                        context.extensionWrappers = newWrappers;
+                    }
+                } else if (path.equals("/")) {
+                    // Default wrapper 默认servlet 只有/
+                    MappedWrapper newWrapper = new MappedWrapper("", wrapper,
+                            jspWildCard, resourceOnly);
+                    context.defaultWrapper = newWrapper;
+                } else {
+                    // Exact wrapper 精确匹配
+                    final String name;
+                    if (path.length() == 0) {
+                        // Special case for the Context Root mapping which is
+                        // treated as an exact match
+                        name = "/";
+                    } else {
+                        name = path;
+                    }
+                    MappedWrapper newWrapper = new MappedWrapper(name, wrapper,
+                            jspWildCard, resourceOnly);
+                    MappedWrapper[] oldWrappers = context.exactWrappers;
+                    MappedWrapper[] newWrappers = new MappedWrapper[oldWrappers.length + 1];
+                    if (insertMap(oldWrappers, newWrappers, newWrapper)) {
+                        context.exactWrappers = newWrappers;
+                    }
+                }
+            }
+        }
+    
+    
+       /**
+         * Map the specified URI.
+         * @throws IOException
+         */
+        private final void internalMap(CharChunk host, CharChunk uri,
+                String version, MappingData mappingData) throws IOException {
+            // 匹配 Context 
+            // Context mapping
+            ContextList contextList = mappedHost.contextList;
+            MappedContext[] contexts = contextList.contexts;
+            int pos = find(contexts, uri);
+            if (pos == -1) {
+                return;
+            }
+    
+            int lastSlash = -1;
+            int uriEnd = uri.getEnd();
+            int length = -1;
+            boolean found = false;
+            MappedContext context = null;
+            while (pos >= 0) {
+                context = contexts[pos];
+                if (uri.startsWith(context.name)) {
+                    length = context.name.length();
+                    if (uri.getLength() == length) {
+                        found = true;
+                        break;
+                    } else if (uri.startsWithIgnoreCase("/", length)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (lastSlash == -1) {
+                    lastSlash = nthSlash(uri, contextList.nesting + 1);
+                } else {
+                    lastSlash = lastSlash(uri);
+                }
+                uri.setEnd(lastSlash);
+                pos = find(contexts, uri);
+            }
+            uri.setEnd(uriEnd);
+    
+            if (!found) {
+                if (contexts[0].name.equals("")) {
+                    context = contexts[0];
+                } else {
+                    context = null;
+                }
+            }
+            if (context == null) {
+                return;
+            }
+    
+            mappingData.contextPath.setString(context.name);
+    
+            ContextVersion contextVersion = null;
+            ContextVersion[] contextVersions = context.versions;
+            final int versionCount = contextVersions.length;
+            if (versionCount > 1) {
+                Context[] contextObjects = new Context[contextVersions.length];
+                for (int i = 0; i < contextObjects.length; i++) {
+                    contextObjects[i] = contextVersions[i].object;
+                }
+                mappingData.contexts = contextObjects;
+                if (version != null) {
+                    contextVersion = exactFind(contextVersions, version);
+                }
+            }
+            if (contextVersion == null) {
+                // Return the latest version
+                // The versions array is known to contain at least one element
+                contextVersion = contextVersions[versionCount - 1];
+            }
+            mappingData.context = contextVersion.object;
+            mappingData.contextSlashCount = contextVersion.slashCount;
+    
+            // Wrapper mapping
+            if (!contextVersion.isPaused()) {
+                internalMapWrapper(contextVersion, uri, mappingData);
+            }
+
+        }
+
+
+        
+        private final void internalMapWrapper(ContextVersion contextVersion,
+                                                  CharChunk path,
+                                                  MappingData mappingData) throws IOException {
+        
+                int pathOffset = path.getOffset();
+                int pathEnd = path.getEnd();
+                boolean noServletPath = false;
+        
+                int length = contextVersion.path.length();
+                if (length == (pathEnd - pathOffset)) {
+                    noServletPath = true;
+                }
+                int servletPath = pathOffset + length;
+                path.setOffset(servletPath);
+        
+                // Rule 1 -- Exact Match
+                MappedWrapper[] exactWrappers = contextVersion.exactWrappers;
+                internalMapExactWrapper(exactWrappers, path, mappingData);
+        
+                // Rule 2 -- Prefix Match
+                boolean checkJspWelcomeFiles = false;
+                MappedWrapper[] wildcardWrappers = contextVersion.wildcardWrappers;
+                if (mappingData.wrapper == null) {
+                    internalMapWildcardWrapper(wildcardWrappers, contextVersion.nesting,
+                                               path, mappingData);
+                    if (mappingData.wrapper != null && mappingData.jspWildCard) {
+                        char[] buf = path.getBuffer();
+                        if (buf[pathEnd - 1] == '/') {
+                            /*
+                             * Path ending in '/' was mapped to JSP servlet based on
+                             * wildcard match (e.g., as specified in url-pattern of a
+                             * jsp-property-group.
+                             * Force the context's welcome files, which are interpreted
+                             * as JSP files (since they match the url-pattern), to be
+                             * considered. See Bugzilla 27664.
+                             */
+                            mappingData.wrapper = null;
+                            checkJspWelcomeFiles = true;
+                        } else {
+                            // See Bugzilla 27704
+                            mappingData.wrapperPath.setChars(buf, path.getStart(),
+                                                             path.getLength());
+                            mappingData.pathInfo.recycle();
+                        }
+                    }
+                }
+        
+                if(mappingData.wrapper == null && noServletPath &&
+                        contextVersion.object.getMapperContextRootRedirectEnabled()) {
+                    // The path is empty, redirect to "/"
+                    path.append('/');
+                    pathEnd = path.getEnd();
+                    mappingData.redirectPath.setChars
+                        (path.getBuffer(), pathOffset, pathEnd - pathOffset);
+                    path.setEnd(pathEnd - 1);
+                    return;
+                }
+        
+                // Rule 3 -- Extension Match
+                MappedWrapper[] extensionWrappers = contextVersion.extensionWrappers;
+                if (mappingData.wrapper == null && !checkJspWelcomeFiles) {
+                    internalMapExtensionWrapper(extensionWrappers, path, mappingData,
+                            true);
+                }
+        
+                // Rule 4 -- Welcome resources processing for servlets
+                if (mappingData.wrapper == null) {
+                    boolean checkWelcomeFiles = checkJspWelcomeFiles;
+                    if (!checkWelcomeFiles) {
+                        char[] buf = path.getBuffer();
+                        checkWelcomeFiles = (buf[pathEnd - 1] == '/');
+                    }
+                    if (checkWelcomeFiles) {
+                        for (int i = 0; (i < contextVersion.welcomeResources.length)
+                                 && (mappingData.wrapper == null); i++) {
+                            path.setOffset(pathOffset);
+                            path.setEnd(pathEnd);
+                            path.append(contextVersion.welcomeResources[i], 0,
+                                    contextVersion.welcomeResources[i].length());
+                            path.setOffset(servletPath);
+        
+                            // Rule 4a -- Welcome resources processing for exact macth
+                            internalMapExactWrapper(exactWrappers, path, mappingData);
+        
+                            // Rule 4b -- Welcome resources processing for prefix match
+                            if (mappingData.wrapper == null) {
+                                internalMapWildcardWrapper
+                                    (wildcardWrappers, contextVersion.nesting,
+                                     path, mappingData);
+                            }
+        
+                            // Rule 4c -- Welcome resources processing
+                            //            for physical folder
+                            if (mappingData.wrapper == null
+                                && contextVersion.resources != null) {
+                                String pathStr = path.toString();
+                                WebResource file =
+                                        contextVersion.resources.getResource(pathStr);
+                                if (file != null && file.isFile()) {
+                                    internalMapExtensionWrapper(extensionWrappers, path,
+                                                                mappingData, true);
+                                    if (mappingData.wrapper == null
+                                        && contextVersion.defaultWrapper != null) {
+                                        mappingData.wrapper =
+                                            contextVersion.defaultWrapper.object;
+                                        mappingData.requestPath.setChars
+                                            (path.getBuffer(), path.getStart(),
+                                             path.getLength());
+                                        mappingData.wrapperPath.setChars
+                                            (path.getBuffer(), path.getStart(),
+                                             path.getLength());
+                                        mappingData.requestPath.setString(pathStr);
+                                        mappingData.wrapperPath.setString(pathStr);
+                                    }
+                                }
+                            }
+                        }
+        
+                        path.setOffset(servletPath);
+                        path.setEnd(pathEnd);
+                    }
+        
+                }
+        
+                /* welcome file processing - take 2
+                 * Now that we have looked for welcome files with a physical
+                 * backing, now look for an extension mapping listed
+                 * but may not have a physical backing to it. This is for
+                 * the case of index.jsf, index.do, etc.
+                 * A watered down version of rule 4
+                 */
+                if (mappingData.wrapper == null) {
+                    boolean checkWelcomeFiles = checkJspWelcomeFiles;
+                    if (!checkWelcomeFiles) {
+                        char[] buf = path.getBuffer();
+                        checkWelcomeFiles = (buf[pathEnd - 1] == '/');
+                    }
+                    if (checkWelcomeFiles) {
+                        for (int i = 0; (i < contextVersion.welcomeResources.length)
+                                 && (mappingData.wrapper == null); i++) {
+                            path.setOffset(pathOffset);
+                            path.setEnd(pathEnd);
+                            path.append(contextVersion.welcomeResources[i], 0,
+                                        contextVersion.welcomeResources[i].length());
+                            path.setOffset(servletPath);
+                            internalMapExtensionWrapper(extensionWrappers, path,
+                                                        mappingData, false);
+                        }
+        
+                        path.setOffset(servletPath);
+                        path.setEnd(pathEnd);
+                    }
+                }
+        
+        
+                // Rule 7 -- Default servlet
+                if (mappingData.wrapper == null && !checkJspWelcomeFiles) {
+                    if (contextVersion.defaultWrapper != null) {
+                        mappingData.wrapper = contextVersion.defaultWrapper.object;
+                        mappingData.requestPath.setChars
+                            (path.getBuffer(), path.getStart(), path.getLength());
+                        mappingData.wrapperPath.setChars
+                            (path.getBuffer(), path.getStart(), path.getLength());
+                        mappingData.matchType = MappingMatch.DEFAULT;
+                    }
+                    // Redirection to a folder
+                    char[] buf = path.getBuffer();
+                    if (contextVersion.resources != null && buf[pathEnd -1 ] != '/') {
+                        String pathStr = path.toString();
+                        // Note: Check redirect first to save unnecessary getResource()
+                        //       call. See BZ 62968.
+                        if (contextVersion.object.getMapperDirectoryRedirectEnabled()) {
+                            WebResource file;
+                            // Handle context root
+                            if (pathStr.length() == 0) {
+                                file = contextVersion.resources.getResource("/");
+                            } else {
+                                file = contextVersion.resources.getResource(pathStr);
+                            }
+                            if (file != null && file.isDirectory()) {
+                                // Note: this mutates the path: do not do any processing
+                                // after this (since we set the redirectPath, there
+                                // shouldn't be any)
+                                path.setOffset(pathOffset);
+                                path.append('/');
+                                mappingData.redirectPath.setChars
+                                    (path.getBuffer(), path.getStart(), path.getLength());
+                            } else {
+                                mappingData.requestPath.setString(pathStr);
+                                mappingData.wrapperPath.setString(pathStr);
+                            }
+                        } else {
+                            mappingData.requestPath.setString(pathStr);
+                            mappingData.wrapperPath.setString(pathStr);
+                        }
+                    }
+                }
+        
+                path.setOffset(pathOffset);
+                path.setEnd(pathEnd);
+            }
+            
+            
+        /**
+         * 扩展匹配
+         * Exact mapping.
+         */
+        private final void internalMapExactWrapper
+            (MappedWrapper[] wrappers, CharChunk path, MappingData mappingData) {
+            MappedWrapper wrapper = exactFind(wrappers, path);
+            if (wrapper != null) {
+                mappingData.requestPath.setString(wrapper.name);
+                mappingData.wrapper = wrapper.object;
+                if (path.equals("/")) {
+                    // Special handling for Context Root mapped servlet
+                    mappingData.pathInfo.setString("/");
+                    mappingData.wrapperPath.setString("");
+                    // This seems wrong but it is what the spec says...
+                    mappingData.contextPath.setString("");
+                    mappingData.matchType = MappingMatch.CONTEXT_ROOT;
+                } else {
+                    mappingData.wrapperPath.setString(wrapper.name);
+                    mappingData.matchType = MappingMatch.EXACT;
+                }
+            }
+        }
+
+}
+```
+
+
 
 
 ### coyote
@@ -342,6 +935,46 @@ NOI2：采用JDK7最新NOI2库实现
 APR：采用apache APR实现。是C++编写的本地库，如果使用需本地安装 APR
 
 ![tomcat-transport](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/tomcat/tomcat-transport.png)
+
+
+### Connector
+几个核心概念
+#####   Endpoint
+Coyote 通信端点，即通信监听的端口，是具体的Socket接收处理类，是对传输层的抽象。
+
+#####   Processor
+Coyote协议处理接口，负载构造Request和Response对象，并通过Adapter讲其提交给Container容器处理。
+是对应用层的抽象。Processor是单线程的，Tomcat在同一次连接中复用Processor。
+Tomcat按照协议不同提供了三个实现类：Http11Processor、AjpProcessor、StreamProcessor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
