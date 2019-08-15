@@ -7,7 +7,7 @@ package concurrent.synchronizedt;
  **/
 public class SynchronizedDemo {
 
-    private int a = 1;
+    private static int a = 0;
 
     /**
      * 同步方法快
@@ -21,7 +21,7 @@ public class SynchronizedDemo {
 //        this.wait();
         System.out.println("after");
         timeout(1000);
-        a = 2;
+        a = 1;
     }
 
     private void timeout(long timeout) {
@@ -40,11 +40,16 @@ public class SynchronizedDemo {
         printA();
     }
 
+    public synchronized static void get3(){
+        printA();
+        a=3;
+    }
+
 
     public void getSyncClass() {
         synchronized (SynchronizedDemo.class){
             printA();
-            a=3;
+            a=2;
         }
     }
 
@@ -56,7 +61,7 @@ public class SynchronizedDemo {
         }
     }
 
-    private void printA() {
+    private static void printA() {
         System.out.println(Thread.currentThread().getName()+a);
     }
 
@@ -65,6 +70,8 @@ public class SynchronizedDemo {
             printA();
         }
     }
+
+
 
 
 
@@ -99,11 +106,14 @@ public class SynchronizedDemo {
         thread3.setName("getSyncString-");
         Thread thread4 = new Thread(() -> synchronizedDemo.getSyncString1());
         thread4.setName("getSyncString1-");
+        Thread thread5 = new Thread(() -> get3());
+        thread5.setName("get3-");
         thread.start();
         thread1.start();
         thread2.start();
         thread3.start();
         thread4.start();
+        thread5.start();
         // ============同步 同一个对象 结束=========== //
 
     }
