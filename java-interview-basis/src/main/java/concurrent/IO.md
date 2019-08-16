@@ -14,3 +14,7 @@
 
 
 
+#####   IO多路复用
+![ioMultiplexing](https://www.processon.com/diagraming/getdef?tempId=5d56cec1e4b0d780770189e0&id=5d56cbc4e4b01f02f5565ef5&_=1565970113610)
+
+
