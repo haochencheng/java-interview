@@ -172,7 +172,7 @@ public class BaseLoadBalancer extends AbstractLoadBalancer implements
 
 ```java
 /**
- * Interface that defines a "Rule" for a LoadBalancer. A Rule can be thought of
+ *IRule
  * as a Strategy for loadbalacing. Well known loadbalancing strategies include
  * Round Robin, Response Time based etc.
  * 
@@ -881,7 +881,7 @@ public class ServerStats {
 
 ```java
 /**
- * The most well known and basic load balancing strategy, i.e. Round Robin Rule.
+ *IRule
  *
  * @author stonse
  * @author Nikos Michalakis <nikos@netflix.com>

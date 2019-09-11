@@ -1,6 +1,8 @@
 package pers.interview.ribbon;
 
+import pers.interview.ribbon.common.IRule;
 import pers.interview.ribbon.common.Server;
+import pers.interview.ribbon.util.ServerChooseTest;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,13 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author: haochencheng
  * @create: 2019-09-11 18:08
  **/
-public class RoundRobinRule {
+public class RoundRobinRule implements IRule {
 
     private List<Server> allServerList;
 
     private AtomicInteger nextServerCyclicCounter;
-
-    private static AtomicInteger counter=new AtomicInteger();
 
     public RoundRobinRule(){
         nextServerCyclicCounter=new AtomicInteger(0);
@@ -33,33 +33,11 @@ public class RoundRobinRule {
         roundRobinRule.addServer(new Server("1", 80));
         roundRobinRule.addServer(new Server("2", 80));
         roundRobinRule.addServer(new Server("3", 80));
-//        singleThread(roundRobinRule);
-        multiThread(roundRobinRule);
+        ServerChooseTest.singleThread(roundRobinRule);
+//        ServerChooseTest.multiThread(roundRobinRule);
     }
 
-    private static void singleThread(RoundRobinRule roundRobinRule) {
-        for (int i = 0; i < 100; i++) {
-            chooseServer(roundRobinRule);
-        }
-    }
-
-    private static void multiThread(RoundRobinRule roundRobinRule) throws InterruptedException {
-        CountDownLatch countDownLatch=new CountDownLatch(10);
-        Runnable runnable = () -> {
-            countDownLatch.countDown();
-            chooseServer(roundRobinRule);
-        };
-        for (int i = 0; i < 100; i++) {
-            new Thread(runnable).run();
-        }
-        countDownLatch.await();
-    }
-
-    private static void chooseServer(RoundRobinRule roundRobinRule) {
-        Server choose = roundRobinRule.choose();
-        System.out.println(counter.incrementAndGet()+" - "+choose.toString());
-    }
-
+    @Override
     public Server choose() {
         Server server = null;
         int count = 0;
