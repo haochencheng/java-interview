@@ -47,6 +47,7 @@ public class SynchronizedProduceAndCustomerDemo {
                         sleep(1200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        return;
                     }
                 }
 
@@ -57,18 +58,20 @@ public class SynchronizedProduceAndCustomerDemo {
 
     private void read(){
         synchronized (this) {
-            System.out.println(Thread.currentThread().getName() + "线程获取锁成功");
+            System.out.println(Thread.currentThread().getName() + "线程获取锁>>");
             if (list.isEmpty()) {
                 System.out.println(Thread.currentThread().getName() + "============等待获取资源");
                 try {
                     this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    return;
                 }
             }else {
                 System.out.println(list.pop());
                 this.notify();
             }
+            System.out.println(Thread.currentThread().getName() + "线程释放锁<<");
         }
     }
 
@@ -82,7 +85,7 @@ public class SynchronizedProduceAndCustomerDemo {
 //                        }
 //                        Thread.yield();
             // 同步对象 wait
-            System.out.println(Thread.currentThread().getName() + "线程获取锁成功");
+            System.out.println(Thread.currentThread().getName() + "线程获取锁>>");
             if (!list.isEmpty()) {
                 try {
                     System.out.println(Thread.currentThread().getName()+ "等待消费者消费");
@@ -95,6 +98,7 @@ public class SynchronizedProduceAndCustomerDemo {
                 list.add(new Random().nextInt(10));
                 this.notify();
             }
+            System.out.println(Thread.currentThread().getName() + "线程释放锁<<");
         }
     }
 
