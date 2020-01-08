@@ -48,13 +48,15 @@ public class ConcurrentInitDataWithLock {
         }
     }
 
-    private Lock lock=new ReentrantLock();
+    private ReentrantLock lock=new ReentrantLock();
+    private volatile boolean init=false;
 
     private void init(){
         System.out.println(Thread.currentThread().getName()+"准备执行");
-        if (lock.tryLock()){
+        if (lock.tryLock() && !init){
             System.out.println(Thread.currentThread().getName()+"获取许可成功");
             System.out.println("init");
+            init=true;
         }
     }
 
