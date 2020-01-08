@@ -19,9 +19,8 @@ public class ConcurrentInitDataWithLock {
         CountDownLatch countDownLatch=new CountDownLatch(COUNT);
         ConcurrentInitDataWithLock concurrentInitDataWithSemaphore =new ConcurrentInitDataWithLock();
         for (int i = 0; i < COUNT; i++) {
-            Thread thread = new Thread(new InitClass(concurrentInitDataWithSemaphore));
+            Thread thread = new Thread(new InitClass(concurrentInitDataWithSemaphore,countDownLatch));
             thread.setName("线程-" + i);
-            countDownLatch.countDown();
             thread.start();
         }
     }
@@ -30,12 +29,21 @@ public class ConcurrentInitDataWithLock {
 
         private ConcurrentInitDataWithLock concurrentInitDataWithSemaphore;
 
-        public InitClass(ConcurrentInitDataWithLock concurrentInitDataWithSemaphore) {
+        private CountDownLatch countDownLatch;
+
+        public InitClass(ConcurrentInitDataWithLock concurrentInitDataWithSemaphore, CountDownLatch countDownLatch) {
             this.concurrentInitDataWithSemaphore = concurrentInitDataWithSemaphore;
+            this.countDownLatch = countDownLatch;
         }
 
         @Override
         public void run() {
+            countDownLatch.countDown();
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             concurrentInitDataWithSemaphore.init();
         }
     }
