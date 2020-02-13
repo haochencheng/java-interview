@@ -1,7 +1,6 @@
 package concurrent.synchronizedt;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
