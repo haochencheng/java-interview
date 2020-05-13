@@ -68,11 +68,21 @@ https://www.jianshu.com/p/0d0f3ee83bf1
 
  如在Redis中，假设有5个节点，每个节点平均负责3276个槽。
 
-![虚拟槽hash](C:\Users\chencheng.hao\AppData\Roaming\Typora\typora-user-images\image-20200513130748690.png)
+![虚拟槽hash](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/hash分区/虚拟槽hash.png)
 
  由于采用了分散性较好的哈希函数，所有的数据大致均匀分布在0~16383各个槽中，计算公式为slot = CRC16(key) & 16383，当要操作数据时，只需要计算出相应的槽，并根据槽即可找到对应的节点。
 
 
 
+![虚拟槽hash-键映射](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/hash分区/虚拟槽hash健映射.png)
 
+- 虚拟槽分布的特点
 
+  (1) 解耦数据和节点之间的关系，简化了节点的扩容和收缩。
+  (2) 解决了普通一致性哈希分区只有少量节点负载不均衡问题。
+  (3) 支持节点、槽、键之间的映射查询，用于数据路由。
+
+  ### 总结
+
+   (1) 常见的哈希分区规则有：节点取余分区、一致性哈希分区和虚拟槽分区。
+    (2) Redis Cluster数据分区规则采用虚拟槽方式，所有的键映射到16384个槽中，每个节点负责一部分槽和相关数据，实现数据和请求的负载均衡。
