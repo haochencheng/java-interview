@@ -12,3 +12,33 @@ CLUSTER MEET <ip> <port>
 
  例如下图，假设有三个独立运行的节点127.0.0.1:7000、127.0.0.1:7001、127.0.0.1:7002（下文省略ip地址，直接使用端口号来区分各个节点），它们各自处于自己的集群里。
 
+![manyNode](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/redisCluster/manyNode.png)
+
+
+
+首先使用客户端连接上节点7000，通过向节点7000发送命令：
+
+```
+127.0.0.1:7000> CLUSTER MEET 127.0.0.1 7001
+OK
+```
+
+ 执行成功就表示节点7001成功加入到节点7000所在的集群，可以通过命令*CLUSTER NODES*查看集群中的节点。
+
+![nodeJoinCluster](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/redisCluster/nodeJoinCluster.png)
+
+ 同理执行命令：
+
+```
+127.0.0.1:7000> CLUSTER MEET 127.0.0.1 7003
+OK
+```
+
+![NodeJoinCluster1](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/redisCluster/NodeJoinCluster1.png)
+
+ 以上就是几个相互独立的节点通过握手组建成了一个集群。下面介绍组建成一个集群过程中的过程及*CLUSTER MEET*命令实现的原理。
+
+
+
+
+
