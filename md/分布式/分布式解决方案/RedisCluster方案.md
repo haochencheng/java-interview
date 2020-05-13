@@ -38,7 +38,34 @@ OK
 
  以上就是几个相互独立的节点通过握手组建成了一个集群。下面介绍组建成一个集群过程中的过程及*CLUSTER MEET*命令实现的原理。
 
+### 启动节点
+
+ 一个节点就是运行在集群模式下的Redis服务器，Redis服务器在启动时会根据cluster_enable配置选项是否为yes来决定是否开启服务器集群模式，如下图所示：
+
+![clusterStart](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/redisCluster/clusterStart.png)
 
 
 
+**节点会使用所有在单机模式中使用的服务器组件**，如使用数据库保存键值对、使用*RDB*持久化模块和*AOF*持久化模块、使用发布与订阅模块来执行*PUBLISH*和*SUBSCRIBE*等命令。除此之外，在集群模式下使用到的数据，节点将他们保存在clusterNode结构、clusterLink结构和clusterState结构中。
+
+### 集群数据结构
+
+clusterNode结构保存了一个节点当前的状态，如节点的创建时间、节点的名字、节点的IP地址和端口号等。每个节点都会创建一个clusterNode结构来记录自己的状态，并为集群里所有其他节点（包括主节点和从节点）都创建相应的clusterNode结构，以记录其他节点的状态。
+
+```
+struct clusterNode{
+    // ...
+    // 创建节点的时间
+    mstime_t time;
+    // 节点的名字，由40个十六进制字符组成
+    char name[REDIS_CLUSTER_NAMELEN]
+    // 节点标识，用来标识节点的角色（如主节点或从节点）、节点目前状态，（如在在线或下线）
+    int flag;
+    // 保存连接节点所需的有关信息
+    clusterLink *link
+    // 节点的端口
+    int port;
+    // ...
+}
+```
 
