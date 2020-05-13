@@ -16,7 +16,7 @@ https://www.jianshu.com/p/0d0f3ee83bf1
 
 如果此时增加一个节点，那么经过重新hash计算后得到的分布如下（其中数据1、2、3、20这4个数据存储的位置没有改变，其他的数据位置都发生了改变。）：
 
-
+![节点区取余2](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/hash分区/节点取余2.png))
 
 
 
