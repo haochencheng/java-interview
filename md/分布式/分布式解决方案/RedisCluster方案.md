@@ -171,3 +171,12 @@ OK
 
 一个节点除了会将自己负责的槽记录在clusterNode结构的slots属性和numslots属性之外，它还会将自己的slots数组通过发送给集群中的其他节点，以此来告知其他节点自己目前负责处理哪些槽。例如，对节点7000、7001和7002来说，它们会告知彼此自己负责的槽。
 
+![](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/槽处理.png)
+
+![](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/槽处理1.png)
+
+### 记录集群所有槽的指派信息
+
+ clusterState结构中也有一个slots数组，它记录的是集群中所有16384个槽的指派信息。例如，对于7000、7001和7002三个节点，它们的clusterState结构中的slots数组都一样，如下图：
+
+得授权，非商业转载请注明出处。
