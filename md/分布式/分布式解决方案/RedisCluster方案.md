@@ -179,4 +179,12 @@ OK
 
  clusterState结构中也有一个slots数组，它记录的是集群中所有16384个槽的指派信息。例如，对于7000、7001和7002三个节点，它们的clusterState结构中的slots数组都一样，如下图：
 
-得授权，非商业转载请注明出处。
+![clusterState](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/clusterState.png)
+
+```
+  (1) 前面说了每个节点都会知道数据库中的16384个槽分别指派给了集群中哪些节点，为什么还要在clusterState结构中使用slots数组呢？
+    这是因为虽然节点知道槽指派给了哪些节点，但是如果要想知道槽i是否已经被指派或者指派给了哪个节点，只能通过遍历clusterNode.nodes字典中的所有的clusterNode结构，检查这些结构的slots数组，知道找到为止，这个过程的复杂度为O(N)。相反，如果在clusterState结构中保存了槽指派信息的slots数组，只需检查该数组中的槽i的指派情况即可，这个过程时间复杂度为O(1)。
+  (2) 两个结构中的slots数组的区别：clusterState.slots数组记录了集群中所有槽的指派信息，而clusterNode.slots数组只记录了clusterNode结构所代表的的节点的槽的指派信息。
+
+```
+
