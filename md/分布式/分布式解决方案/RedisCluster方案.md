@@ -206,3 +206,99 @@ OK
 
 ## 在集群中执行命令
 
+对数据库中的16384个槽指派后，集群就处于上线状态，这时客户端就可以向集群中的节点发送数据命令了。
+  当客户端向节点发送与数据库键有关的命令时，接收命令的节点会计算出要处理的数据库键属于哪个槽，并检查这个槽是否分配给了自己：
+
+```
+如果键所在的槽正好就是指派了个当前节点，那么节点直接执行这个命令。
+如果键所在槽并没有指派给当前节点，那么节点会向客户端返回一个MOVED错误，指引客户端转向（redirect）至正确的节点，并再次发送之前想要执行的命令。
+
+```
+
+![客户端执行命令流程](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/客户端执行命令流程.png)
+
+###  计算键属于哪个槽
+
+节Redis首先需要计算键所对应的槽。根据槽的有效部分使用CRC16函数计算出散列值，再取对16383的余数，每个键都可以映射到0~16383槽范围内。
+  如果键内容包含“{” 和“}”大括号字符，大括号内的内容又叫做hash_tag，则计算槽的有效部分是括号内的内容，这就会使得即使键不相同，也可以使键具有相同的slot的功能，常用于Redis IO优化。例如在集群模式下使用mget等命令优化批量调用时，键列表必须具有相同的slot，否则会报错。这时可以利用hash_tag让不同的键具有相同的slot达到优化的目的。
+
+ 使用*CLUSTERKYESLOT *命令可以查看一个键属于哪个槽，如：
+
+```
+127.0.0.1:7000> cluster keyslot "book";
+(integer) 1337
+127.0.0.1:7000> cluster keyslot "date";
+(integer) 2202
+127.0.0.1:7000> cluster keyslot "lst";
+(integer) 3347
+127.0.0.1:7000> cluster keyslot "name";
+(integer) 5798
+127.0.0.1:7000> cluster keyslot "msg";
+(integer) 6257
+
+```
+
+使用hash_tag让不同的键具有相同的槽：
+
+```
+127.0.0.1:7000> cluster keyslot "book{fruits}haha";
+(integer) 14943
+127.0.0.1:7000> cluster keyslot "date{fruits}hehe";
+(integer) 14943
+127.0.0.1:7000> cluster keyslot "lst{fruits}xixi";
+(integer) 14943
+```
+
+### 判断槽是否由当前节点负责处理
+
+ 计算出键所属的槽后，节点就会检查自己在clusterState.slots数组中的项i，判断键是否属于负责。
+例如，客户端向节点7000发送命令：
+
+```
+127.0.0.1:7000>set msg"happy new year!";
+```
+
+节点首先计算出键msg属于的槽6257，然后检查clusterState.slots[6257]是否等于clusterState.myself，结果发现并不相等，说明该槽不是节点7000负责处理，于是节点7000访问clusterState.slots[6257]所指向的clusterNode结构，并根据结构中的IP地址127.0.0.1和端口号7001，向客户端返回错误MOVED 6257 127.0.0.1:7001，指引节点转向至正在负责处理槽6257的节点7001。
+
+![set命令通过槽获取处理节点](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/set命令通过槽获取处理节点.png)
+
+### MOVED错误
+
+ MOVED错误的格式为：*MOVED* <slot> <ip>:<port>
+
+ 当客户端接收到节点返回的*MOVED*错误时，客户端会根据*MOVED*的错误中提供的IP地址和端口号，转向负责处理槽slot的节点，并向该节点重新发送之前想要执行的命令。
+
+![客户端MOVED错误](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/客户端MOVED错误.png)
+
+### 节点数据库的实现
+
+集群节点和单机服务器在保存数据方式上完全相同，唯一的区别就是节点只能使用0号数据库，而单机Redis服务器则没有这一限制。
+
+```
+  Redis服务器默认会创建16个数据库，默认情况下，Redis客户端的目标数据库为0号数据库，客户端可以通过执行SELECT命令来切换目标数据库。
+```
+
+ 此外，除了将键值对保存在数据库里，节点还会用clusterState结构中的slots_to_keys[跳跃表](https://www.jianshu.com/p/0ceb34c2116a)保存槽和键之间的关系。
+  slots_to_keys跳跃表的每个节点的成员（member）都是一个数据库键，而每个节点的分值（score）都是该键所属的槽号。
+
+```
+每当节点往数据库中添加一个新的键值对时，节点就会将这个键以及键的槽号关联到slots_to_keys跳跃表
+当节点删除数据库中的某个键值对时，节点就会在slots_to_keys跳跃表解除被删除键与槽号的关联。
+```
+
+ 例如，对于数据库键book（slot = 1337）、date（slot = 2022）和lst（slot = 3347），节点7000将会创建如下的slots_to_keys跳跃表：
+
+![键槽跳跃表](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/键槽跳跃表.png)
+
+
+
+通过跳跃表中记录各个数据库键所属的槽，节点可以很方便地对属于某个或某些槽的所有的数据库键进行批量操作。例如，要想删除槽1337至3347的所有数据库键，通过跳跃表查询到分值为1337和3347的节点，然后使用链表的删除操作直接将两个节点之间的节点删除即可。命令*CLUSTER GETKEYSINSLOT  *命令返回最多count的数据库键，而这个命令就是通过slots_to_keys跳跃表实现的。
+
+## 重新分片
+
+Redis的重新分片是指可以将任意数量已经指派给某个节点（源节点）的槽指派给另一个节点（目标节点），并且相关槽的键值对也会从源节点被移动到目标节点。
+  重新分片可以在线（online）进行，在重新分片的过程中，集群不用下线，并且源节点可以继续处理命令请求。
+
+ 例如，对于之前提到的，包含 7000 、7001 和7002 三个节点的集群来说，可以向这个集群添加一个 IP 为 127.0.0.1，端口号为 7003 的节点（后面简称节点 7003)。然后通过重新分片操作， 将原本指派给节点 7002 的槽 15001 至 16383 改为指派给节点 7003。
+
+![集群添加节点](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/集群添加节点.png)
