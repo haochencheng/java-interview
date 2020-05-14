@@ -1,4 +1,8 @@
- Redis Cluster是Redis分布式解决方案，集群通过分片(sharing)来对数据共享，并提供复制和故障转移功能。
+https://www.jianshu.com/p/42e2a06e0d09
+
+https://zhuanlan.zhihu.com/p/69800024 
+
+Redis Cluster是Redis分布式解决方案，集群通过分片(sharing)来对数据共享，并提供复制和故障转移功能。
   本文将介绍集群的**节点、槽指派、命令执行、重新分片、转向、故障转移、消息。**
 
 一个Redis集群通常由多个节点（node，就是运行在集群模式式下的Redis服务器）组成，刚开始的时候，每个节点都是相互独立的，它们处于一个只包含自己的集群中，要组建一个集群，就必须将多个独立的节点连接起来，构成一个包含多个节点的集群。
@@ -187,4 +191,18 @@ OK
   (2) 两个结构中的slots数组的区别：clusterState.slots数组记录了集群中所有槽的指派信息，而clusterNode.slots数组只记录了clusterNode结构所代表的的节点的槽的指派信息。
 
 ```
+
+###  CLUSTER ADDSLOTS 命令的实现
+
+```
+(1) 遍历所有输入的槽，检查它们是否都未被指派。
+(2) 如果存在任何一个槽已经被指派，那么向客户端返回错误，并终止命令。
+(3) 如果这些输入槽都没有被指派，再次遍历所有输入槽，设置clusterState结构的slots数组，将slots[i]的指针指向代表当前节点的clusterNode结构。接着访问当前节点的clusterNode结构的slots数组，将数组在索引i的二进制设置为1.
+```
+
+下图表示给槽1、2指派节点的过程：
+
+![clusterState](https://raw.githubusercontent.com/haochencheng/java-interview/master/pic/槽指派.png)
+
+## 在集群中执行命令
 
