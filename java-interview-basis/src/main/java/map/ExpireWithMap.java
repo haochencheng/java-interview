@@ -10,6 +10,10 @@ import java.util.concurrent.*;
 
 /**
  * 带有过期性质得hashMap
+ * 延期删除+定时删除
+ * 延期删除缺点：如果key长时间没用被get，会存在大量过期key，占用内存。  优点：对cpu友好
+ * 定时删除缺点：如果 key数据量大，对cpu压力大。   优点：对内存友好
+ *
  * @param <T>
  */
 @Data
@@ -22,7 +26,7 @@ public class ExpireWithMap<T> {
     public ExpireWithMap() {
         this.expireDataHashMap = new HashMap<>();
         executorService=Executors.newScheduledThreadPool(1,r -> new Thread(r,"清理线程"));
-        executorService.scheduleAtFixedRate(new cleanTask(),1,1, TimeUnit.MINUTES);
+        executorService.scheduleAtFixedRate(new CleanTask(),1,1, TimeUnit.MINUTES);
     }
 
     /**
@@ -69,7 +73,7 @@ public class ExpireWithMap<T> {
     /**
      * 定时清理过期key任务
      */
-    class cleanTask implements Runnable {
+    class CleanTask implements Runnable {
 
         @Override
         public void run() {
@@ -98,11 +102,11 @@ public class ExpireWithMap<T> {
 
     public static void main(String[] args) {
         ExpireWithMap expireWithMap=new ExpireWithMap();
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        Runnable putTask = () -> expireWithMap.put("", 2, 10);
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         String key="123";
-        Runnable getTask = () -> expireWithMap.get(key);
-        executorService.submit(putTask);
+        expireWithMap.put(key, 2, 10);
+        Runnable getTask = () -> System.out.println("key:"+expireWithMap.get(key));
+        scheduledExecutorService.scheduleAtFixedRate(getTask,0,5,TimeUnit.SECONDS);
     }
 
 
