@@ -1,4 +1,4 @@
-package map;
+package cache;
 
 import lombok.Data;
 
@@ -17,13 +17,13 @@ import java.util.concurrent.*;
  * @param <T>
  */
 @Data
-public class ExpireWithMap<T> {
+public class ExpireCache<T> {
 
     private HashMap<String,ExpireData> expireDataHashMap;
 
     private ScheduledExecutorService executorService;
 
-    public ExpireWithMap() {
+    public ExpireCache() {
         this.expireDataHashMap = new HashMap<>();
         executorService=Executors.newScheduledThreadPool(1,r -> new Thread(r,"清理线程"));
         executorService.scheduleAtFixedRate(new CleanTask(),1,1, TimeUnit.MINUTES);
@@ -101,7 +101,7 @@ public class ExpireWithMap<T> {
     }
 
     public static void main(String[] args) {
-        ExpireWithMap expireWithMap=new ExpireWithMap();
+        ExpireCache expireWithMap=new ExpireCache();
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         String key="123";
         expireWithMap.put(key, 2, 10);
