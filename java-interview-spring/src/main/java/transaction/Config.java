@@ -1,9 +1,7 @@
 package transaction;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -14,7 +12,9 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource("mysql.properties")
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
+//@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class Config {
 
     @Value("${jdbc.driverClassName}")
