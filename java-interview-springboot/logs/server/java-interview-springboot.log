@@ -1,0 +1,182 @@
+Java HotSpot(TM) 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+[0.008s][warning][gc] -Xloggc is deprecated. Will use -Xlog:gc:/Users/haochencheng/Workspace/interview/java-interview/java-interview-springboot/logs/gclog/gc.log instead.
+[0.021s][info   ][gc] Using Concurrent Mark Sweep
+[0.021s][info   ][gc,heap,coops] Heap address: 0x00000007fcc00000, size: 52 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+[0.393s][info   ][gc,start     ] GC(0) Pause Young (Allocation Failure)
+[0.393s][info   ][gc,task      ] GC(0) Using 2 workers of 4 for evacuation
+[0.400s][info   ][gc,heap      ] GC(0) ParNew: 14272K->1727K(16000K)
+[0.400s][info   ][gc,heap      ] GC(0) CMS: 0K->818K(35520K)
+[0.400s][info   ][gc,metaspace ] GC(0) Metaspace: 9799K->9799K(1058816K)
+[0.400s][info   ][gc           ] GC(0) Pause Young (Allocation Failure) 13M->2M(50M) 6.546ms
+[0.400s][info   ][gc,cpu       ] GC(0) User=0.01s Sys=0.00s Real=0.00s
+[0.580s][info   ][gc,start     ] GC(1) Pause Young (Allocation Failure)
+[0.580s][info   ][gc,task      ] GC(1) Using 4 workers of 4 for evacuation
+[0.588s][info   ][gc,heap      ] GC(1) ParNew: 15999K->1727K(16000K)
+[0.588s][info   ][gc,heap      ] GC(1) CMS: 818K->2686K(35520K)
+[0.588s][info   ][gc,metaspace ] GC(1) Metaspace: 12318K->12318K(1060864K)
+[0.588s][info   ][gc           ] GC(1) Pause Young (Allocation Failure) 16M->4M(50M) 7.906ms
+[0.588s][info   ][gc,cpu       ] GC(1) User=0.02s Sys=0.00s Real=0.01s
+[0.588s][info   ][gc,start     ] GC(2) Pause Young (GCLocker Initiated GC)
+[0.588s][info   ][gc,task      ] GC(2) Using 4 workers of 4 for evacuation
+[0.591s][info   ][gc,heap      ] GC(2) ParNew: 1811K->148K(16000K)
+[0.591s][info   ][gc,heap      ] GC(2) CMS: 2686K->3706K(35520K)
+[0.591s][info   ][gc,metaspace ] GC(2) Metaspace: 12318K->12318K(1060864K)
+[0.591s][info   ][gc           ] GC(2) Pause Young (GCLocker Initiated GC) 4M->3M(50M) 2.826ms
+[0.591s][info   ][gc,cpu       ] GC(2) User=0.01s Sys=0.00s Real=0.00s
+[0.730s][info   ][gc,start     ] GC(3) Pause Young (Allocation Failure)
+[0.730s][info   ][gc,task      ] GC(3) Using 4 workers of 4 for evacuation
+[0.732s][info   ][gc,heap      ] GC(3) ParNew: 14420K->1336K(16000K)
+[0.732s][info   ][gc,heap      ] GC(3) CMS: 3706K->3706K(35520K)
+[0.732s][info   ][gc,metaspace ] GC(3) Metaspace: 14687K->14687K(1062912K)
+[0.732s][info   ][gc           ] GC(3) Pause Young (Allocation Failure) 17M->4M(50M) 2.346ms
+[0.732s][info   ][gc,cpu       ] GC(3) User=0.01s Sys=0.00s Real=0.01s
+[0.808s][info   ][gc,start     ] GC(4) Pause Young (Allocation Failure)
+[0.808s][info   ][gc,task      ] GC(4) Using 4 workers of 4 for evacuation
+[0.812s][info   ][gc,heap      ] GC(4) ParNew: 15608K->821K(16000K)
+[0.812s][info   ][gc,heap      ] GC(4) CMS: 3706K->4466K(35520K)
+[0.812s][info   ][gc,metaspace ] GC(4) Metaspace: 16089K->16089K(1064960K)
+[0.812s][info   ][gc           ] GC(4) Pause Young (Allocation Failure) 18M->5M(50M) 3.408ms
+[0.812s][info   ][gc,cpu       ] GC(4) User=0.01s Sys=0.00s Real=0.00s
+[0.912s][info   ][gc,start     ] GC(5) Pause Young (Allocation Failure)
+[0.912s][info   ][gc,task      ] GC(5) Using 4 workers of 4 for evacuation
+[0.913s][info   ][gc,heap      ] GC(5) ParNew: 15093K->942K(16000K)
+[0.913s][info   ][gc,heap      ] GC(5) CMS: 4466K->4466K(35520K)
+[0.913s][info   ][gc,metaspace ] GC(5) Metaspace: 18176K->18176K(1067008K)
+[0.913s][info   ][gc           ] GC(5) Pause Young (Allocation Failure) 19M->5M(50M) 1.527ms
+[0.914s][info   ][gc,cpu       ] GC(5) User=0.00s Sys=0.00s Real=0.00s
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::  (v2.3.1.BUILD-SNAPSHOT)
+
+[0.980s][info   ][gc,start     ] GC(6) Pause Young (Allocation Failure)
+[0.980s][info   ][gc,task      ] GC(6) Using 4 workers of 4 for evacuation
+[0.985s][info   ][gc,heap      ] GC(6) ParNew: 15214K->963K(16000K)
+[0.985s][info   ][gc,heap      ] GC(6) CMS: 4466K->4685K(35520K)
+[0.985s][info   ][gc,metaspace ] GC(6) Metaspace: 19650K->19650K(1067008K)
+[0.985s][info   ][gc           ] GC(6) Pause Young (Allocation Failure) 19M->5M(50M) 4.662ms
+[0.985s][info   ][gc,cpu       ] GC(6) User=0.01s Sys=0.00s Real=0.01s
+[1.065s][info   ][gc,start     ] GC(7) Pause Young (Allocation Failure)
+[1.065s][info   ][gc,task      ] GC(7) Using 4 workers of 4 for evacuation
+[1.068s][info   ][gc,heap      ] GC(7) ParNew: 15235K->1127K(16000K)
+[1.068s][info   ][gc,heap      ] GC(7) CMS: 4685K->5054K(35520K)
+[1.068s][info   ][gc,metaspace ] GC(7) Metaspace: 20796K->20796K(1069056K)
+[1.068s][info   ][gc           ] GC(7) Pause Young (Allocation Failure) 19M->6M(50M) 2.941ms
+[1.068s][info   ][gc,cpu       ] GC(7) User=0.01s Sys=0.00s Real=0.00s
+[1.068s][info   ][gc,start     ] GC(8) Pause Initial Mark
+[1.069s][info   ][gc           ] GC(8) Pause Initial Mark 6M->6M(50M) 0.845ms
+[1.069s][info   ][gc,cpu       ] GC(8) User=0.01s Sys=0.00s Real=0.00s
+[1.069s][info   ][gc           ] GC(8) Concurrent Mark
+[1.076s][info   ][gc           ] GC(8) Concurrent Mark 6.962ms
+[1.076s][info   ][gc,cpu       ] GC(8) User=0.02s Sys=0.00s Real=0.01s
+[1.076s][info   ][gc           ] GC(8) Concurrent Preclean
+[1.077s][info   ][gc           ] GC(8) Concurrent Preclean 0.217ms
+[1.077s][info   ][gc,cpu       ] GC(8) User=0.00s Sys=0.00s Real=0.00s
+[1.077s][info   ][gc,start     ] GC(8) Pause Remark
+[1.080s][info   ][gc           ] GC(8) Pause Remark 6M->6M(50M) 3.234ms
+[1.080s][info   ][gc,cpu       ] GC(8) User=0.01s Sys=0.00s Real=0.00s
+[1.080s][info   ][gc           ] GC(8) Concurrent Sweep
+[1.083s][info   ][gc           ] GC(8) Concurrent Sweep 2.901ms
+[1.083s][info   ][gc,cpu       ] GC(8) User=0.01s Sys=0.00s Real=0.01s
+[1.083s][info   ][gc           ] GC(8) Concurrent Reset
+[1.083s][info   ][gc           ] GC(8) Concurrent Reset 0.069ms
+[1.083s][info   ][gc,cpu       ] GC(8) User=0.00s Sys=0.00s Real=0.00s
+[1.083s][info   ][gc,heap      ] GC(8) Old: 5054K->4361K(35520K)
+2020-07-11 16:52:27.759  INFO 39652 --- [           main] p.i.s.JavaInterviewSpringbootApplication : Starting JavaInterviewSpringbootApplication on localhost-2 with PID 39652 (/Users/haochencheng/Workspace/interview/java-interview/java-interview-springboot/target/java-interview-springboot-0.0.1-SNAPSHOT.jar started by haochencheng in /Users/haochencheng/Workspace/interview/java-interview/java-interview-springboot)
+2020-07-11 16:52:27.763  INFO 39652 --- [           main] p.i.s.JavaInterviewSpringbootApplication : No active profile set, falling back to default profiles: default
+[1.233s][info   ][gc,start     ] GC(9) Pause Young (Allocation Failure)
+[1.233s][info   ][gc,task      ] GC(9) Using 3 workers of 4 for evacuation
+[1.237s][info   ][gc,heap      ] GC(9) ParNew: 15399K->1384K(16000K)
+[1.237s][info   ][gc,heap      ] GC(9) CMS: 4361K->4611K(35520K)
+[1.237s][info   ][gc,metaspace ] GC(9) Metaspace: 22007K->22007K(1069056K)
+[1.237s][info   ][gc           ] GC(9) Pause Young (Allocation Failure) 19M->5M(50M) 3.477ms
+[1.237s][info   ][gc,cpu       ] GC(9) User=0.01s Sys=0.00s Real=0.00s
+[1.406s][info   ][gc,start     ] GC(10) Pause Young (Allocation Failure)
+[1.406s][info   ][gc,task      ] GC(10) Using 4 workers of 4 for evacuation
+[1.417s][info   ][gc,heap      ] GC(10) ParNew: 15656K->1495K(16000K)
+[1.417s][info   ][gc,heap      ] GC(10) CMS: 4611K->4895K(35520K)
+[1.417s][info   ][gc,metaspace ] GC(10) Metaspace: 23276K->23276K(1071104K)
+[1.417s][info   ][gc           ] GC(10) Pause Young (Allocation Failure) 19M->6M(50M) 10.535ms
+[1.417s][info   ][gc,cpu       ] GC(10) User=0.02s Sys=0.00s Real=0.01s
+[1.505s][info   ][gc,start     ] GC(11) Pause Young (Allocation Failure)
+[1.505s][info   ][gc,task      ] GC(11) Using 3 workers of 4 for evacuation
+[1.512s][info   ][gc,heap      ] GC(11) ParNew: 15767K->1728K(16000K)
+[1.512s][info   ][gc,heap      ] GC(11) CMS: 4895K->6146K(35520K)
+[1.512s][info   ][gc,metaspace ] GC(11) Metaspace: 23588K->23588K(1071104K)
+[1.512s][info   ][gc           ] GC(11) Pause Young (Allocation Failure) 20M->7M(50M) 7.095ms
+[1.512s][info   ][gc,cpu       ] GC(11) User=0.02s Sys=0.00s Real=0.01s
+[1.640s][info   ][gc,start     ] GC(12) Pause Young (Allocation Failure)
+[1.640s][info   ][gc,task      ] GC(12) Using 4 workers of 4 for evacuation
+[1.643s][info   ][gc,heap      ] GC(12) ParNew: 16000K->948K(16000K)
+[1.643s][info   ][gc,heap      ] GC(12) CMS: 6146K->6497K(35520K)
+[1.643s][info   ][gc,metaspace ] GC(12) Metaspace: 23958K->23958K(1071104K)
+[1.643s][info   ][gc           ] GC(12) Pause Young (Allocation Failure) 21M->7M(50M) 3.569ms
+[1.643s][info   ][gc,cpu       ] GC(12) User=0.01s Sys=0.00s Real=0.01s
+[1.725s][info   ][gc,start     ] GC(13) Pause Young (Allocation Failure)
+[1.725s][info   ][gc,task      ] GC(13) Using 4 workers of 4 for evacuation
+[1.726s][info   ][gc,heap      ] GC(13) ParNew: 15220K->1068K(16000K)
+[1.726s][info   ][gc,heap      ] GC(13) CMS: 6497K->6497K(35520K)
+[1.726s][info   ][gc,metaspace ] GC(13) Metaspace: 24197K->24197K(1071104K)
+[1.726s][info   ][gc           ] GC(13) Pause Young (Allocation Failure) 21M->7M(50M) 1.164ms
+[1.727s][info   ][gc,cpu       ] GC(13) User=0.01s Sys=0.00s Real=0.00s
+[1.856s][info   ][gc,start     ] GC(14) Pause Young (Allocation Failure)
+[1.856s][info   ][gc,task      ] GC(14) Using 3 workers of 4 for evacuation
+[1.860s][info   ][gc,heap      ] GC(14) ParNew: 15340K->1385K(16000K)
+[1.860s][info   ][gc,heap      ] GC(14) CMS: 6497K->6822K(35520K)
+[1.860s][info   ][gc,metaspace ] GC(14) Metaspace: 25155K->25155K(1073152K)
+[1.860s][info   ][gc           ] GC(14) Pause Young (Allocation Failure) 21M->8M(50M) 3.670ms
+[1.860s][info   ][gc,cpu       ] GC(14) User=0.00s Sys=0.00s Real=0.00s
+[2.113s][info   ][gc,start     ] GC(15) Pause Young (Allocation Failure)
+[2.114s][info   ][gc,task      ] GC(15) Using 2 workers of 4 for evacuation
+[2.118s][info   ][gc,heap      ] GC(15) ParNew: 15657K->1681K(16000K)
+[2.118s][info   ][gc,heap      ] GC(15) CMS: 6822K->6986K(35520K)
+[2.118s][info   ][gc,metaspace ] GC(15) Metaspace: 26729K->26729K(1073152K)
+[2.118s][info   ][gc           ] GC(15) Pause Young (Allocation Failure) 21M->8M(50M) 4.693ms
+[2.118s][info   ][gc,cpu       ] GC(15) User=0.01s Sys=0.00s Real=0.00s
+[2.438s][info   ][gc,start     ] GC(16) Pause Young (Allocation Failure)
+[2.438s][info   ][gc,task      ] GC(16) Using 2 workers of 4 for evacuation
+[2.444s][info   ][gc,heap      ] GC(16) ParNew: 15953K->1728K(16000K)
+[2.444s][info   ][gc,heap      ] GC(16) CMS: 6986K->7637K(35520K)
+[2.444s][info   ][gc,metaspace ] GC(16) Metaspace: 28336K->28336K(1075200K)
+[2.444s][info   ][gc           ] GC(16) Pause Young (Allocation Failure) 22M->9M(50M) 5.692ms
+[2.444s][info   ][gc,cpu       ] GC(16) User=0.02s Sys=0.00s Real=0.01s
+[2.591s][info   ][gc,start     ] GC(17) Pause Young (Allocation Failure)
+[2.591s][info   ][gc,task      ] GC(17) Using 2 workers of 4 for evacuation
+[2.599s][info   ][gc,heap      ] GC(17) ParNew: 16000K->1419K(16000K)
+[2.599s][info   ][gc,heap      ] GC(17) CMS: 7637K->9006K(35520K)
+[2.599s][info   ][gc,metaspace ] GC(17) Metaspace: 29747K->29747K(1077248K)
+[2.599s][info   ][gc           ] GC(17) Pause Young (Allocation Failure) 23M->10M(50M) 7.954ms
+[2.599s][info   ][gc,cpu       ] GC(17) User=0.03s Sys=0.00s Real=0.01s
+2020-07-11 16:52:29.324  INFO 39652 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2020-07-11 16:52:29.339  INFO 39652 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-07-11 16:52:29.339  INFO 39652 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.36]
+[2.758s][info   ][gc,start     ] GC(18) Pause Young (Allocation Failure)
+[2.758s][info   ][gc,task      ] GC(18) Using 2 workers of 4 for evacuation
+[2.762s][info   ][gc,heap      ] GC(18) ParNew: 15691K->1194K(16000K)
+[2.762s][info   ][gc,heap      ] GC(18) CMS: 9006K->9793K(35520K)
+[2.762s][info   ][gc,metaspace ] GC(18) Metaspace: 31210K->31210K(1077248K)
+[2.762s][info   ][gc           ] GC(18) Pause Young (Allocation Failure) 24M->10M(50M) 4.502ms
+[2.762s][info   ][gc,cpu       ] GC(18) User=0.02s Sys=0.00s Real=0.01s
+2020-07-11 16:52:29.441  INFO 39652 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2020-07-11 16:52:29.441  INFO 39652 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1594 ms
+[2.914s][info   ][gc,start     ] GC(19) Pause Young (Allocation Failure)
+[2.914s][info   ][gc,task      ] GC(19) Using 4 workers of 4 for evacuation
+[2.917s][info   ][gc,heap      ] GC(19) ParNew: 15466K->1316K(16000K)
+[2.917s][info   ][gc,heap      ] GC(19) CMS: 9793K->10428K(35520K)
+[2.917s][info   ][gc,metaspace ] GC(19) Metaspace: 32085K->32085K(1079296K)
+[2.917s][info   ][gc           ] GC(19) Pause Young (Allocation Failure) 24M->11M(50M) 3.051ms
+[2.917s][info   ][gc,cpu       ] GC(19) User=0.01s Sys=0.00s Real=0.00s
+2020-07-11 16:52:29.646  INFO 39652 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+[3.055s][info   ][gc,start     ] GC(20) Pause Young (Allocation Failure)
+[3.055s][info   ][gc,task      ] GC(20) Using 4 workers of 4 for evacuation
+[3.059s][info   ][gc,heap      ] GC(20) ParNew: 15588K->1527K(16000K)
+[3.059s][info   ][gc,heap      ] GC(20) CMS: 10428K->11054K(35520K)
+[3.059s][info   ][gc,metaspace ] GC(20) Metaspace: 33114K->33114K(1079296K)
+[3.059s][info   ][gc           ] GC(20) Pause Young (Allocation Failure) 25M->12M(50M) 3.648ms
+[3.059s][info   ][gc,cpu       ] GC(20) User=0.01s Sys=0.00s Real=0.00s
+2020-07-11 16:52:29.857  INFO 39652 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2020-07-11 16:52:29.870  INFO 39652 --- [           main] p.i.s.JavaInterviewSpringbootApplication : Started JavaInterviewSpringbootApplication in 2.699 seconds (JVM running for 3.211)
