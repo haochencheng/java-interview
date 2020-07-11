@@ -59,10 +59,15 @@ sh bin/jvm.sh heap
 sh bin/jvm.sh histo
 
 ```
-
+通过jmap 定位内存中大对象
 ```text
 num 	  #instances	#bytes	Class description
 --------------------------------------------------------------------------
 1:		36257	22330216	byte[]
+```
+
+分析gc日志：logs/gclog/gc.log
+```text
+https://gceasy.io/
 ```
 
