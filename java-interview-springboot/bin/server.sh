@@ -4,13 +4,13 @@ source ${BIN_DIR}/base.sh
 
 JAR_DIR=${WORK_DIR}/target
 JAR_NAME=$(find ${JAR_DIR} -name *.jar)
-SERVER_LOG=${LOG_DIR}/server/${SERVER_NAME}.log
+SERVER_LOG=${LOG_DIR}/server/start.log
 PID_FILE=${WORK_DIR}/${SERVER_NAME}.pid
 # gc log
 GC_LOG_NAME=gc.log
 GC_LOG=${LOG_DIR}/gclog/${GC_LOG_NAME}
 
-LOW_MEMORY="-Xmx52m -Xms52m"
+LOW_MEMORY="-Xmx30m -Xms30m"
 MID_MEMORY="-Xmx512m -Xms512m"
 HEIGHT_MEMORY="-Xmx1g -Xms1g"
 
@@ -45,9 +45,10 @@ else
 fi
 echo ${JAVA_OPS}
 
-SPRINGBOOT_OPS=" --server.tomcat.max-threads=10"
+SPRINGBOOT_OPS=" --server.tomcat.max-threads=10 "
+LOG_OPS=" -Dlogback.home=${LOG_DIR}/server "
 
-JAVA_CMD="${JAVA} ${JAVA_OPS} -jar ${JAR_NAME} ${SPRINGBOOT_OPS} "
+JAVA_CMD="${JAVA} ${JAVA_OPS} ${LOG_OPS} -jar ${JAR_NAME} ${SPRINGBOOT_OPS} "
 
 RET_VAL=0
 
@@ -58,9 +59,9 @@ function start() {
         echo ${STATUS}
         exit 0
     fi
-    START_CMD="nohup $JAVA_CMD > ${SERVER_LOG} 2>&1 &"
+    START_CMD="nohup $JAVA_CMD > /dev/null 2>&1 &"
     echo "执行启动命令:[$START_CMD]"
-    echo -e $(date) "服务启动开始\n" >> ${SERVER_LOG}
+    echo $(date) "服务启动开始\n" >> ${SERVER_LOG}
     eval "${START_CMD}"
     RET_VAL=$?
     if [[ ${RET_VAL} = 0 ]]; then
@@ -68,8 +69,10 @@ function start() {
         echo ${PID} > "${PID_FILE}"
 #        wait ${PID}
         echo "执行启动命令成功！pid:"${PID}
+        echo $(date) "服务启动成功\n" >> ${SERVER_LOG}
     else
         echo "start failure"
+        echo $(date) "服务启动失败\n" >> ${SERVER_LOG}
     fi
 }
 
@@ -84,7 +87,6 @@ function stop(){
      sleep 1
      echo "进程睡眠1秒\n" >> "${SERVER_LOG}"
      CURRENT_GC_LOG=$(find ${WORK_DIR} -name ${GC_LOG_NAME})
-     mv ${SERVER_LOG} ${SERVER_LOG}_${DATE_TIME}
      mv ${CURRENT_GC_LOG} ${GC_LOG}_${DATE_TIME}
      kill -9 `cat "${PID_FILE}"`
      echo "" > ${PID_FILE}

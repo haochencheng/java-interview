@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pers.interview.springboot.common.ResponseResult;
 
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 创建大的对象
@@ -19,10 +18,11 @@ import java.util.Set;
 @RequestMapping("/big")
 public class BigObjectController {
 
-    private Set<byte[]> byteSet=new HashSet<>();
+    private HashSet<byte[]> byteSet=new HashSet<>();
 
     @GetMapping("/add")
     public ResponseResult addBigObject(){
+        // 1m
         byte[] bytes=new byte[1024*1024];
         byteSet.add(bytes);
         return ResponseResult.successful();
