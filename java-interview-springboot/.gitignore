@@ -29,4 +29,6 @@ build/
 
 ### VS Code ###
 .vscode/
-*.log*
+*.log
+.pid
+logback.home_IS_UNDEFINED/

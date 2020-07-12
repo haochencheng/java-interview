@@ -8,8 +8,8 @@ if [[ $? = 1 ]]; then
     echo ${MVN}
     exit 1
 fi
-OUT_OF_MEMORY="-Dtest=pers.interview.springboot.controller.BigObjectControllerTest#addBigObject"
-CPU_TOP="-Dtest=pers.interview.springboot.controller.CpuTopControllerTest#top"
+OUT_OF_MEMORY="-DskipTests=false -Dtest=pers.interview.springboot.controller.BigObjectControllerTest#addBigObject"
+CPU_TOP="-DskipTests=false -Dtest=pers.interview.springboot.controller.CpuTopControllerTest#top"
 
 LOG_OPS=" -Dlogback.home=${LOG_DIR}/test "
 

@@ -9,13 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import pers.interview.springboot.common.ResponseResult;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 class CpuTopControllerTest {
 
-    private ExecutorService executorService= Executors.newFixedThreadPool(10);
+    public static final int COUNT = 50;
+    private ExecutorService executorService= Executors.newFixedThreadPool(20);
 
     private RestTemplate restTemplate=new RestTemplate();
 
@@ -25,24 +26,28 @@ class CpuTopControllerTest {
 
     @Test
     void top() {
-        for (int i = 0; i < 100; i++) {
-            executorService.execute(()->call());
+        List<Future> futureList=new ArrayList<>();
+        for (int i = 0; i < COUNT; i++) {
+            Future future =executorService.submit(()->call());
+            futureList.add(future);
         }
-        try {
-            executorService.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        for (Future future : futureList) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
+        executorService.shutdown();
     }
 
-    private void call() {
-        ResponseEntity<ResponseResult> responseEntity;
-        ResponseResult responseResult;
-        do {
-            responseEntity = restTemplate.getForEntity(REQUEST_URL, ResponseResult.class);
-            responseResult = responseEntity.getBody();
-            logger.info(responseResult.toString());
-            Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        }while (responseResult.isSuccess());
+    private ResponseResult call() {
+        ResponseEntity<ResponseResult>   responseEntity = restTemplate.getForEntity(REQUEST_URL, ResponseResult.class);
+        ResponseResult  responseResult = responseEntity.getBody();
+        logger.info(responseResult.toString());
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        return responseResult;
     }
 }

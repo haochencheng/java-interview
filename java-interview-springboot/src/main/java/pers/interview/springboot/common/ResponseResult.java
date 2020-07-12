@@ -1,5 +1,6 @@
 package pers.interview.springboot.common;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
