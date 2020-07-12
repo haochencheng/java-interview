@@ -21,7 +21,7 @@ class BigObjectControllerTest {
 
     private RestTemplate restTemplate=new RestTemplate();
 
-    private String addUrl="http://localhost:8080/big/add";
+    private final static String ADD_URL="http://localhost:8080/big/add";
 
     @Test
     @DisplayName("Test assert java.lang.OutOfMemoryError")
@@ -31,7 +31,7 @@ class BigObjectControllerTest {
             ResponseResult responseResult;
             Random random = new Random();
             do {
-                responseEntity = restTemplate.getForEntity(addUrl, ResponseResult.class);
+                responseEntity = restTemplate.getForEntity(ADD_URL, ResponseResult.class);
                 responseResult = responseEntity.getBody();
                 logger.info(responseResult.toString());
                 Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -40,4 +40,5 @@ class BigObjectControllerTest {
         };
         Assertions.assertThrows(HttpServerErrorException.InternalServerError.class, closureContainingCodeToTest, "java.lang.OutOfMemoryError");
     }
+
 }

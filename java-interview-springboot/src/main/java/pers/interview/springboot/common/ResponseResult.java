@@ -18,6 +18,11 @@ public class ResponseResult<T> {
 
     }
 
+    private ResponseResult(int code,T data){
+        this.code=code;
+        this.data=data;
+    }
+
     private ResponseResult(int code,String msg,T data){
         this.code=code;
         this.msg=msg;
@@ -33,6 +38,12 @@ public class ResponseResult<T> {
     public static ResponseResult successful(){
         return new ResponseResult();
     }
+
+    public static <T> ResponseResult successful(T data){
+        return new ResponseResult(SUCCESS_CODE,data);
+    }
+
+
 
     public static <T> ResponseResult error(String msg,T data){
         return new ResponseResult(-1,msg,data);

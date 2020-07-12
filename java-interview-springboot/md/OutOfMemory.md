@@ -1,7 +1,7 @@
 ### 模拟java内存溢出
 编译打包 
 ```bash
-mvn clean install 
+mvn clean install  -DskipTests=true
 ```
 
 ####    server.sh
