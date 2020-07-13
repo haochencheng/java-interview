@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pers.interview.springboot.common.ResponseResult;
 
-import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

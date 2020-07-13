@@ -3,7 +3,6 @@
 ```bash
 mvn clean install  -DskipTests=true
 ```
-
 ####    server.sh
 服务启动脚本
 - 启动程序参数$1  
@@ -19,12 +18,15 @@ LOW_MEMORY="-Xmx52m -Xms52m"
 ```bash
 sh server.sh start low 
 ```
-
+2.执行测试脚本
+```shell script
+sh bin/test.sh cpuTop
+```
+等一会可以看到tomcat拒绝连接
 查看程序线程数
 ```bash
 sh bin/jvm.sh thread
 ```
-
 
 执行测试脚本
 

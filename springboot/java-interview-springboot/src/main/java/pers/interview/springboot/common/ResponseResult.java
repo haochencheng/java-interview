@@ -50,6 +50,10 @@ public class ResponseResult<T> {
         return new ResponseResult(-1,msg,data);
     }
 
+    public static <T> ResponseResult error(int code,String msg){
+        return new ResponseResult(code,msg,EMPTY);
+    }
+
     public static <T> ResponseResult error(String msg){
         return new ResponseResult(-1,msg,EMPTY);
     }

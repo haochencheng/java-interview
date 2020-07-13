@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS `sku`
+(
+    `id` INT(11) AUTO_INCREMENT,
+    `inventory` VARCHAR(100) NOT NULL,
+    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+CREATE TABLE IF NOT EXISTS `order`
+(
+    `id` INT(11)  AUTO_INCREMENT,
+    `sku_id` INT(11) NOT NULL,
+    `order_no` VARCHAR(50) NOT NULL,
+    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
