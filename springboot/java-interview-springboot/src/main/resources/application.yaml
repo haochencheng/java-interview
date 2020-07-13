@@ -8,20 +8,20 @@ spring:
     password: 123
 server:
   port: 8080
-  tomcat:
-    accept-count: 10
-    max-connections: 10
-    threads.max: 10
-    connection-timeout: 5
+#  tomcat:
+#    accept-count: 10
+#    max-connections: 10
+#    threads.max: 10
+#    connection-timeout: 5
 
 management:
   endpoints:
     jmx:
       exposure:
-        include: *
+        include: '*'
     web:
       exposure:
-        include: *
+        include: '*'
     health:
       show:
         details: always

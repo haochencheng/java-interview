@@ -45,9 +45,9 @@ else
 fi
 echo ${JAVA_OPS}
 
-SPRINGBOOT_OPS="-server.tomcat.accept-count=10 \
-                -server.tomcat.max-connections=10 \
-                -server.tomcat.threads.max=10"
+SPRINGBOOT_OPS="-Dserver.tomcat.accept-count=10 \
+                -Dserver.tomcat.max-connections=10 \
+                -Dserver.tomcat.threads.max=10"
 LOG_OPS=" -Dlogback.home=${LOG_DIR}/server "
 
 JAVA_CMD="${JAVA} ${JAVA_OPS} ${LOG_OPS} -jar ${JAR_NAME} ${SPRINGBOOT_OPS} "
