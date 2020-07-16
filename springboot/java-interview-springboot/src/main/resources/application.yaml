@@ -14,6 +14,7 @@ server:
 #    threads.max: 10
 #    connection-timeout: 5
 
+
 management:
   endpoints:
     jmx:

@@ -5,15 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.interview.springboot.controller.OrderController;
 import pers.interview.springboot.dao.OrderDao;
 import pers.interview.springboot.exception.InventoryNotEnoughException;
 import pers.interview.springboot.vo.OrderRequest;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
 
 
 @Service
@@ -21,24 +18,17 @@ public class OrderService {
 
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
-    private HashMap<Integer,SkuInventoryService> skuInventoryServiceHashMap=new HashMap<>();
-
+    @Autowired
     private OrderDao orderDao;
-
-    public OrderService(OrderDao orderDao){
-        this.orderDao=orderDao;
-        skuInventoryServiceHashMap.put(0,(Integer skuId,int currentInventory)-> orderDao.subInventory(skuId,currentInventory));
-        skuInventoryServiceHashMap.put(1,(Integer skuId,int currentInventory)-> orderDao.subInventoryWithVersion(skuId,currentInventory));
-    }
 
     /**
      * 下订单服务 直接更新扣减后库存
      * @param orderRequest
      * @return
      */
-    @Transactional(rollbackFor = SQLException.class)
+
     public void order(OrderRequest orderRequest) throws InventoryNotEnoughException {
-        createOrder(orderRequest,getSkuInventoryService(0));
+        createOrder(orderRequest,0);
     }
 
     /**
@@ -46,12 +36,20 @@ public class OrderService {
      * @param orderRequest
      * @return
      */
-    @Transactional(rollbackFor = SQLException.class)
     public void orderWithVersion(OrderRequest orderRequest) throws InventoryNotEnoughException {
-        createOrder(orderRequest,getSkuInventoryService(1));
+        createOrder(orderRequest,1);
     }
 
-    private void createOrder(OrderRequest orderRequest, SkuInventoryService skuInventoryService) throws InventoryNotEnoughException {
+    /**
+     * type为1的时候 使用 subInventoryWithVersion 扣减库存
+     * 如果使用 @Transactional，spring将数据库auto commit 为false，会造成死锁。
+     * 其他线程更新了 库存，因为mysql默认 PR ，没有提交事务读到的始终是 事务开始时候的数据。更新失败造成死锁。
+     * @param orderRequest
+     * @param type
+     * @throws InventoryNotEnoughException
+     */
+//    @Transactional(rollbackFor = SQLException.class)
+    public void createOrder(OrderRequest orderRequest,int type) throws InventoryNotEnoughException {
         Integer skuId = orderRequest.getSkuId();
         int skuLeft;
         do {
@@ -61,16 +59,19 @@ public class OrderService {
                 throw new InventoryNotEnoughException();
             }
             // 扣减库存
-        }while (!skuInventoryService.subInventory(skuId,skuLeft));
+        }while (!subInventory(skuId,skuLeft,type));
         // 扣减成功 创建订单
         String orderNo = System.currentTimeMillis() + "" + ThreadLocalRandom.current().nextLong();
         orderRequest.setOrderNo(orderNo);
         orderDao.createOrder(orderRequest);
     }
 
-    private SkuInventoryService getSkuInventoryService(int type){
-        return skuInventoryServiceHashMap.get(type);
+    private boolean subInventory(int skuId,int skuLeft, int type) {
+        if (type==0){
+            return orderDao.subInventory(skuId,skuLeft);
+        }else {
+            return orderDao.subInventoryWithVersion(skuId,skuLeft);
+        }
     }
-
 
 }

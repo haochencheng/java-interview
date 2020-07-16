@@ -57,8 +57,8 @@ class OrderControllerTest {
         List<Future> futureList = new ArrayList<>();
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setSkuId(1);
-        for (int i = 0; i < COUNT; i++) {
-//        for (int i = 0; i < 1; i++) {
+//        for (int i = 0; i < COUNT; i++) {
+        for (int i = 0; i < 3; i++) {
             orderRequest.setUserId(i);
             Future future = executorService.submit(() -> call(requestUrlVersion, orderRequest));
             futureList.add(future);
