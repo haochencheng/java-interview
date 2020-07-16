@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: java-interview-springboot
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///myschool
+    username: root
+    password: 123
+server:
+  port: 8080
+#  tomcat:
+#    accept-count: 10
+#    max-connections: 10
+#    threads.max: 10
+#    connection-timeout: 5
+
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+    health:
+      show:
+        details: always
+
+
+
+
+
+
+
