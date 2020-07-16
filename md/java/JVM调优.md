@@ -1,3 +1,37 @@
+一、垃圾收集器的种类
+1. Serial 收集器：历史最悠久，单线程工作，回收垃圾时，必须暂停所有其它线程——stop the world，采用复制算法；
+
+2. ParNew收集器：本质为Serial收集器的多线程版本，采用复制算法；
+
+3. Parallel scavenge：具备自使用调节功能，以提供最合适的暂停时间和吞吐量，采用复制算法；
+
+4. Serial old 收集器：是Serial 收集器的老年代版本，同样为单线程，但采用的是“标记-整理”算法；
+
+5. Parallel old 收集器：Parallel scavenge 收集器的老年代版本，多线程，采用的是“标记-整理”算法；
+
+6. CMS 收集器：即Concurrent Mark Sweep收集器，以获取最短停顿时间为目标，采用“标记-清除”算法；
+
+7. G1 收集器： 即Garbage-First收集器，是目前最新的收集器，采用与其它收集器完全不通的设计思想，历时十年才实现商用，采用了混合算法，兼有“复制”和“标记-整理”算法的特点；
+
+二、垃圾收集器的选择
+JVM中，青年代和老年代特点迥异，青年代中对象“朝生夕死”的特点，回收频率较高，适合采用复制算法；而老年代则更适合“标记-整理”算法。鉴于此，JVM采用分代回收的策略：青年代采用复制算法的回收器，老年代采用“标记-整理”算法的回收器。
+
+三、设置垃圾收集器参数
+```
+-XX:+UseSerialGC，虚拟机运行在Client模式下的默认值，Serial+Serial Old。
+
+-XX:+UseParNewGC，ParNew+Serial Old，在JDK1.8被废弃，在JDK1.7还可以使用。
+
+-XX:+UseConcMarkSweepGC，ParNew+CMS+Serial Old。
+
+-XX:+UseParallelGC，虚拟机运行在Server模式下的默认值，Parallel Scavenge+Serial Old(PS Mark Sweep)。
+
+-XX:+UseParallelOldGC，Parallel Scavenge+Parallel Old。
+
+-XX:+UseG1GC，G1+G1。
+```
+
+
 1. 堆大小设置
 
    JVM 中最大堆大小有三方面限制：相关操作系统的数据模型（32-bt还是64-bit）限制；系统的可用虚拟内存限制；系统的可用物理内存限制。32位系统下，一般限制在1.5G~2G；64为操作系统对内存无限制。我在Windows Server 2003 系统，3.5G物理内存，JDK5.0下测试，最大可设置为1478m。
@@ -6,7 +40,7 @@
 
    - java **-Xmx3550m -Xms3550m -Xmn2g** **-Xss128k**
      **-****Xmx3550m**：设置JVM最大可用内存为3550M。
-     **-Xms3550m**：设置JVM促使内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。
+     **-Xms3550m**：设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。
      **-Xmn2g**：设置年轻代大小为2G。**整个JVM内存大小=年轻代大小 + 年老代大小 + 持久代大小**。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8。
      **-Xss128k**：设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。
    - java -Xmx3550m -Xms3550m -Xss128k **-XX:NewRatio=4 -XX:SurvivorRatio=4 -XX:MaxPermSize=16m -XX:MaxTenuringThreshold=0**
