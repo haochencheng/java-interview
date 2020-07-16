@@ -3,9 +3,9 @@ spring:
     name: java-interview-springboot
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql:///myschool
+    url: jdbc:mysql://192.168.43.111:3306/order?useSSL=false
     username: root
-    password: 123
+    password: chencheng
 server:
   port: 8080
 #  tomcat:

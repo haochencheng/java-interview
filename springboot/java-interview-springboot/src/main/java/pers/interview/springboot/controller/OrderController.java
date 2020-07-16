@@ -3,10 +3,7 @@ package pers.interview.springboot.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pers.interview.springboot.common.ResponseResult;
 import pers.interview.springboot.exception.InventoryNotEnoughException;
 import pers.interview.springboot.service.OrderService;
@@ -30,7 +27,7 @@ public class OrderController {
      * 并发下订单
      * @return
      */
-    @GetMapping("/make")
+    @PostMapping("/make")
     public ResponseResult order(@RequestBody OrderRequest orderRequest){
         try {
             orderService.order(orderRequest);
@@ -45,7 +42,7 @@ public class OrderController {
      * 并发下订单
      * @return
      */
-    @GetMapping("/makeV")
+    @PostMapping("/makeV")
     public ResponseResult orderWithVersion(@RequestBody OrderRequest orderRequest){
         try {
             orderService.orderWithVersion(orderRequest);
