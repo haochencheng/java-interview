@@ -4,12 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pers.interview.springboot.dao.OrderDao;
 import pers.interview.springboot.exception.InventoryNotEnoughException;
 import pers.interview.springboot.vo.OrderRequest;
 
-import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -44,6 +42,7 @@ public class OrderService {
      * type为1的时候 使用 subInventoryWithVersion 扣减库存
      * 如果使用 @Transactional，spring将数据库auto commit 为false，会造成死锁。
      * 其他线程更新了 库存，因为mysql默认 PR ，没有提交事务读到的始终是 事务开始时候的数据。更新失败造成死锁。
+     * 使用 cas 更新后不会产生超卖
      * @param orderRequest
      * @param type
      * @throws InventoryNotEnoughException

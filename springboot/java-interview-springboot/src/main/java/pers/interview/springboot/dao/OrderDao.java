@@ -17,7 +17,8 @@ public class OrderDao {
     }
 
     /**
-     * 直接扣减库存
+     * 直接扣减库存,并发条件下 创建订单会超出库存。查询出库存后，其他线程已经修改了 库存。线程无感知
+     * 继续创建订单导致库存超卖
      * @param skuId
      * @param currentInventory
      * @return

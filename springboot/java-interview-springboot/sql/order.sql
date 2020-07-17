@@ -24,3 +24,6 @@ CREATE TABLE IF NOT EXISTS `order`
 -- 测试数据
 INSERT INTO `order`.sku (id, inventory, create_time, name) VALUES
 (1, 100, '2020-07-16 00:57:16', '测试商品1');
+
+-- 更新库存
+update sku set inventory=2000 where id = 1;

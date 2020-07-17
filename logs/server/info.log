@@ -1,0 +1,12 @@
+1151 [main] INFO  p.i.s.JavaInterviewSpringbootApplication - Starting JavaInterviewSpringbootApplication on LAPTOP-6M1MP88N with PID 16876 (D:\workspace\java\project\java-interview\springboot\java-interview-springboot\target\classes started by 陆陆 in D:\workspace\java\project\java-interview)
+1157 [main] INFO  p.i.s.JavaInterviewSpringbootApplication - No active profile set, falling back to default profiles: default
+3209 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+3231 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+3232 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+3233 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.36]
+3435 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+3436 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2211 ms
+3968 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+4440 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+4480 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+4498 [main] INFO  p.i.s.JavaInterviewSpringbootApplication - Started JavaInterviewSpringbootApplication in 4.027 seconds (JVM running for 6.215)

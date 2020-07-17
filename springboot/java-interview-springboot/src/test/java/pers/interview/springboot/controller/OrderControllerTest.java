@@ -23,7 +23,10 @@ class OrderControllerTest {
     private static Logger logger = LoggerFactory.getLogger(OrderControllerTest.class);
 
     public static final int COUNT = 200;
-    private ExecutorService executorService= Executors.newFixedThreadPool(50);
+    public static final int BIG_COUNT = 2000;
+    public static final int THREAD_COUNT = 50;
+    public static final int BIG_THREAD_COUNT = 500;
+    private ExecutorService executorService;
 
     private RestTemplate restTemplate=new RestTemplate();
 
@@ -32,7 +35,8 @@ class OrderControllerTest {
 
     @Test
     void order() {
-        createOrder(REQUEST_URL);
+        executorService=Executors.newFixedThreadPool(THREAD_COUNT);
+        createOrder(REQUEST_URL,COUNT);
     }
 
     private ResponseResult call(String requestUrl, OrderRequest orderRequest) {
@@ -50,15 +54,23 @@ class OrderControllerTest {
 
     @Test
     void orderWithVersion() {
-        createOrder(REQUEST_URL_VERSION);
+        executorService=Executors.newFixedThreadPool(BIG_THREAD_COUNT);
+        createOrder(REQUEST_URL_VERSION,BIG_COUNT);
     }
 
-    private void createOrder(String requestUrlVersion) {
+    @Test
+    void orderWithVersion1() {
+        executorService=Executors.newFixedThreadPool(1);
+        createOrder(REQUEST_URL_VERSION,1);
+    }
+
+    private void createOrder(String requestUrlVersion,Integer count) {
         List<Future> futureList = new ArrayList<>();
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setSkuId(1);
 //        for (int i = 0; i < COUNT; i++) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < count; i++) {
+//        for (int i = 0; i < 3; i++) {
             orderRequest.setUserId(i);
             Future future = executorService.submit(() -> call(requestUrlVersion, orderRequest));
             futureList.add(future);

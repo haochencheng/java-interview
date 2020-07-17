@@ -16,7 +16,7 @@
         </filter>
         <file>${logback.home}/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>java-interview-springboot.%i.log.zip</fileNamePattern>
+            <fileNamePattern>${logback.home:-./logs/server/}/java-interview-springboot.info.%i.log.zip</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>3</maxIndex>
         </rollingPolicy>
@@ -34,9 +34,9 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
-        <file>${logback.home}/error.log</file>
+        <file>${logback.home:-./logs/server/}/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>java-interview-springboot.%i.log.zip</fileNamePattern>
+            <fileNamePattern>${logback.home}/java-interview-springboot.error.%i.log.zip</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>3</maxIndex>
         </rollingPolicy>
