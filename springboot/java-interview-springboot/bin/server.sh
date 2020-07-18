@@ -29,7 +29,7 @@ case $2
 esac
 
 if [[ ${JAVA_VERSION} >  ${JAVA_8} ]] ; then
-    # jdk 1.8以上参数
+    # jdk 1.8以上参数 mac jdk1.8 jmap 有bug
       JAVA_OPS="-server -verbose:gc  ${MEMORY} -Xss256k \
         -XX:+UseConcMarkSweepGC -XX:MaxTenuringThreshold=2 \
            -Xloggc:${GC_LOG}  -Xlog:gc*   \

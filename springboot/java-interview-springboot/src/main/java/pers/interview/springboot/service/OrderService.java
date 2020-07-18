@@ -53,7 +53,6 @@ public class OrderService {
         int skuLeft;
         do {
             skuLeft = orderDao.getSkuInventoryLeft(skuId);
-            logger.info("库存:{}",skuLeft);
             if (skuLeft<=0){
                 throw new InventoryNotEnoughException();
             }

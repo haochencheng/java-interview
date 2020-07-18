@@ -86,10 +86,7 @@ ConfigurableEnvironment environment = prepareEnvironment(listeners,
 					applicationArguments);
 ```
 
-
-
 2. 创建上下文
-
 ```
 	context = createApplicationContext();
 ```

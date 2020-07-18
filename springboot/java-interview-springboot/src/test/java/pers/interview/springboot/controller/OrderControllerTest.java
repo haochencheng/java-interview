@@ -23,9 +23,11 @@ class OrderControllerTest {
     private static Logger logger = LoggerFactory.getLogger(OrderControllerTest.class);
 
     public static final int COUNT = 200;
-    public static final int BIG_COUNT = 2000;
+    public static final int BIG_COUNT = 5000;
+    public static final int VERY_BIG_COUNT = 50000;
     public static final int THREAD_COUNT = 50;
     public static final int BIG_THREAD_COUNT = 500;
+    public static final int VERY_BIG_THREAD_COUNT = 1000;
     private ExecutorService executorService;
 
     private RestTemplate restTemplate=new RestTemplate();
@@ -56,6 +58,12 @@ class OrderControllerTest {
     void orderWithVersion() {
         executorService=Executors.newFixedThreadPool(BIG_THREAD_COUNT);
         createOrder(REQUEST_URL_VERSION,BIG_COUNT);
+    }
+
+    @Test
+    void orderWithVersionMax() {
+        executorService=Executors.newFixedThreadPool(VERY_BIG_THREAD_COUNT);
+        createOrder(REQUEST_URL_VERSION,VERY_BIG_COUNT);
     }
 
     @Test

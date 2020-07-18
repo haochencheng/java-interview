@@ -1,3 +1,6 @@
+-- 查看用户
+select * from mysql.user;
+
 -- 查看正在执行的事务
 SELECT * FROM information_schema.INNODB_TRX;
 

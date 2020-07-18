@@ -87,18 +87,12 @@ Spring Boot检查发布的jar中是否存在META-INF / spring.factories文件。
    @AutoConfigureBefore
    @AutoConfigureOrder.
   ```
-
-
-
 ###	创建自己的starter
 
 一个完整的starter应该包含以下两个组件
 
 - The `autoconfigure` module that contains the auto-configuration code.
-
 - 一个starter提供依赖
-
-
 
 ####	手动启用@Enabled注解
 
@@ -107,9 +101,6 @@ Spring Boot检查发布的jar中是否存在META-INF / spring.factories文件。
 public @interface EnableTransactionManagement {
 }
 ```
-
-
-
 Enabled注解使用@Import注解导入实现
 
 1.ImportSelector
@@ -119,3 +110,44 @@ Enabled注解使用@Import注解导入实现
 3.ImportBeanDefinitionRegistrar
 
 接口的类，该类中方法返回类会被spring管理String[] 
+
+在spring启动调用refresh()中的
+```
+// Invoke factory processors registered as beans in the context.
+invokeBeanFactoryPostProcessors(beanFactory);
+```
+方法实例化所有注册的BeanFactoryPostProcessor
+```
+public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {processConfigBeanDefinitions(BeanDefinitionRegistry registry) 
+```
+...
+。。。
+此方法中会调用
+```
+ConfigurationClassPostProcessor.processConfigBeanDefinitions
+处理配置文件bean定义
+1.首先会对配置文件排序
+2.处理@Configuration配置		// Parse each @Configuration class
+	2.1 判断是注解bean还是普通bean
+	2.2 注解bean通过 ConfigurationClassParser 处理
+		2.2.1 调用ConfigurationClassParser.doProcessConfigurationClass方法
+		2.2.1.1  处理@PropertySource	// Process any @PropertySource annotations
+		2.2.1.2  处理@ComponentScan // Process any @ComponentScan annotations
+		2.2.1.3  处理@Import 	// Process any @Import annotations
+		2.2.1.4  处理@ImportResource  	// Process any @ImportResource annotations
+		2.2.1.5  处理@Bean  // Process individual @Bean methods
+		2.2.1.6 // Process default methods on interfaces
+		2.2.1.7 // Process superclass, if any
+	2.3 调用 this.deferredImportSelectorHandler.process();	 
+	// deferredImportSelector  最后调用 先处理 注解类中其他注解，然后 实例化该注解类 ，
+	// 执行 selectImports在 ImportSelector 后 
+```
+其中  2.2.1.3  处理@Import 分三种情况处理
+1. ImportSelector.class 处理导入handler，返回需要实例化的bean name[]
+2. ImportBeanDefinitionRegistrar.class 通过注解导入bean定义，自己实现
+3. 	// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
+	// process it as an @Configuration class
+	按照普通@Configuration 处理
+解析默认 忽略 java.lang.annotation.  和 org.springframework.stereotype. 注解
+
+AutoConfigurationImportSelector 类实现接口 DeferredImportSelector

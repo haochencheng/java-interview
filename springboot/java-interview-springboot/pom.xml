@@ -11,8 +11,8 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>1.8</java.version>
-<!--        <java.version>11</java.version>-->
+<!--        <java.version>1.8</java.version>-->
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.3.1.RELEASE</spring-boot.version>
@@ -111,6 +111,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+<!--                    单元测试日志文件地址-->
+                    <argLine>-Dlogback.home=/Users/haochencheng/Workspace/interview/java-interview/springboot/java-interview-springboot/logs/client/</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>

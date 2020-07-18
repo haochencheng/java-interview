@@ -1,0 +1,15 @@
+[0.029s][info][gc] Using Concurrent Mark Sweep
+[4.100s][info][gc] GC(0) Pause Initial Mark 170M->170M(2014M) 29.075ms
+[4.100s][info][gc] GC(0) Concurrent Mark
+[4.128s][info][gc] GC(0) Concurrent Mark 27.837ms
+[4.128s][info][gc] GC(0) Concurrent Preclean
+[4.132s][info][gc] GC(0) Concurrent Preclean 3.468ms
+[4.132s][info][gc] GC(0) Concurrent Abortable Preclean
+[4.354s][info][gc] GC(1) Pause Young (Allocation Failure) 266M->8M(2014M) 19.335ms
+[4.935s][info][gc] GC(0) Concurrent Abortable Preclean 803.015ms
+[4.952s][info][gc] GC(0) Pause Remark 226M->226M(2014M) 17.113ms
+[4.953s][info][gc] GC(0) Concurrent Sweep
+[4.953s][info][gc] GC(0) Concurrent Sweep 0.072ms
+[4.953s][info][gc] GC(0) Concurrent Reset
+[4.956s][info][gc] GC(0) Concurrent Reset 2.682ms
+[5.678s][info][gc] GC(2) Pause Young (Allocation Failure) 275M->14M(2014M) 13.821ms

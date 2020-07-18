@@ -1,0 +1,26 @@
+#本地调试启动参数设置
+# jdk1.8
+-Dlogback.home=/Users/haochencheng/Workspace/interview/java-interview/springboot/java-interview-springboot/logs/server/
+-server
+-verbose:gc
+-Xmx1g -Xms1g -Xss256k
+-XX:ParallelGCThreads=5
+-XX:+UseConcMarkSweepGC
+-XX:+UseParNewGC
+-XX:MaxTenuringThreshold=2
+-XX:CMSFullGCsBeforeCompaction=5
+-Xloggc:/Users/haochencheng/Workspace/interview/java-interview/springboot/java-interview-springboot/logs/gclog/gc.log
+-XX:+PrintGC
+-XX:+PrintGCDetails
+-XX:+PrintGCTimeStamps
+-XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=512m
+
+# jdk11
+-Dlogback.home=/Users/haochencheng/Workspace/interview/java-interview/springboot/java-interview-springboot/logs/server/
+-server
+-verbose:gc
+-Xmx1g -Xms1g -Xss256k
+-XX:+UseConcMarkSweepGC
+-XX:MaxTenuringThreshold=2
+-Xlog:gc:/Users/haochencheng/Workspace/interview/java-interview/springboot/java-interview-springboot/logs/gclog/gc.log
+-Xlog:gc*

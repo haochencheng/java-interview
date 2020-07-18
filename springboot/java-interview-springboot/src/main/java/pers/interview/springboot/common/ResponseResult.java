@@ -1,7 +1,5 @@
 package pers.interview.springboot.common;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -22,13 +20,17 @@ public class ResponseResult<T> {
     private ResponseResult(int code,T data){
         this.code=code;
         this.data=data;
+        this.serialNo=SerialNoHolder.getSerialNo();
     }
 
     private ResponseResult(int code,String msg,T data){
         this.code=code;
         this.msg=msg;
         this.data=data;
+        this.serialNo=SerialNoHolder.getSerialNo();
     }
+
+    private String serialNo;
 
     private int code= SUCCESS_CODE;
 
